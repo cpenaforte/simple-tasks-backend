@@ -1,0 +1,24 @@
+22/11/2022 16:52:32: error: uncaughtException: Illegal arguments: undefined, string
+Error: Illegal arguments: undefined, string
+    at Object.bcrypt.compareSync (/home/carlos/workspace/simple-tasks-api/simple-tasks-backend/node_modules/bcryptjs/dist/bcrypt.js:265:19)
+    at /home/carlos/workspace/simple-tasks-api/simple-tasks-backend/src/services/loginService.ts:24:35
+    at step (/home/carlos/workspace/simple-tasks-api/simple-tasks-backend/src/services/loginService.ts:33:23)
+    at Object.next (/home/carlos/workspace/simple-tasks-api/simple-tasks-backend/src/services/loginService.ts:14:53)
+    at /home/carlos/workspace/simple-tasks-api/simple-tasks-backend/src/services/loginService.ts:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (/home/carlos/workspace/simple-tasks-api/simple-tasks-backend/src/services/loginService.ts:4:12)
+    at Query.<anonymous> (/home/carlos/workspace/simple-tasks-api/simple-tasks-backend/src/services/loginService.ts:15:88)
+    at Query.handleReadyForQuery (/home/carlos/workspace/simple-tasks-api/simple-tasks-backend/node_modules/pg/lib/query.js:139:14)
+    at Client._handleReadyForQuery (/home/carlos/workspace/simple-tasks-api/simple-tasks-backend/node_modules/pg/lib/client.js:290:19)
+22/11/2022 16:53:33: error: uncaughtException: Illegal arguments: undefined, string
+Error: Illegal arguments: undefined, string
+    at Object.bcrypt.compareSync (/home/carlos/workspace/simple-tasks-api/simple-tasks-backend/node_modules/bcryptjs/dist/bcrypt.js:265:19)
+    at /home/carlos/workspace/simple-tasks-api/simple-tasks-backend/src/services/loginService.ts:24:35
+    at step (/home/carlos/workspace/simple-tasks-api/simple-tasks-backend/src/services/loginService.ts:33:23)
+    at Object.next (/home/carlos/workspace/simple-tasks-api/simple-tasks-backend/src/services/loginService.ts:14:53)
+    at /home/carlos/workspace/simple-tasks-api/simple-tasks-backend/src/services/loginService.ts:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (/home/carlos/workspace/simple-tasks-api/simple-tasks-backend/src/services/loginService.ts:4:12)
+    at Query.<anonymous> (/home/carlos/workspace/simple-tasks-api/simple-tasks-backend/src/services/loginService.ts:15:88)
+    at Query.handleReadyForQuery (/home/carlos/workspace/simple-tasks-api/simple-tasks-backend/node_modules/pg/lib/query.js:139:14)
+    at Client._handleReadyForQuery (/home/carlos/workspace/simple-tasks-api/simple-tasks-backend/node_modules/pg/lib/client.js:290:19)

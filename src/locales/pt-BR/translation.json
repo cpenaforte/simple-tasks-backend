@@ -1,0 +1,49 @@
+{
+  "LOGIN": {
+    "WRONG_CREDENTIALS": "Email e/ou senha incorreto(s)"
+  },
+  "SYSTEM": {
+    "INTERNAL_ERROR": "Erro interno no servidor",
+    "EXECUTING_METHOD": "{{time}}: Executando método {{method}} em {{- url}}",
+    "RUNNING_PORT": "App rodando na porta {{port}}"
+  },
+  "INFO": "API utilizando Node.js, Express e Postgres",
+  "TOKEN": {
+    "AUTH_FAILED": "A autenticação do token falhou"
+  },
+  "SIGNUP": {
+    "UNFILLED_FIELDS": "Preencha os campos obrigatórios",
+    "UNMATCHED_PASSWORDS": "As senhas informadas não se correspondem",
+    "EMAIL_EXISTS": "Esse email já está cadastrado",
+    "REGISTERED_SUCCESSFULLY": "Cadastrado com sucesso"
+  },
+  "USER_UPDATE": {
+    "ID_NOT_FOUND": "ID de usuário não encontrada",
+    "UPDATED_SUCCESSFULLY": "Usuário atualizado com sucesso"
+  },
+  "MIGRATION": {
+    "RUNNED_SUCCESSFULLY": "Migration {{migrationId}} rodou com sucesso",
+    "FAILED_RUNNING": "Incapaz de rodar a migration {{migrationId}}",
+    "STARTING_MIGRATIONS": "===== Iniciando migrations =====",
+    "FAILED_FETCHING": "Incapaz de encontrar a migration {{migrationId}} na base de dados",
+    "FAILED_INSERTING": "Erro inserindo a migration {{migrationId}} na base de dados. Insira manualmente",
+    "FAILED_UPDATING": "Erro atualizando a migration {{migrationId}} na base de dados. Atualize manualmente",
+    "REMOVED_SUCCESSFULLY": "Migration {{migrationId}} removida com sucesso",
+    "FAILED_REMOVING": "Erro removendo migration {{migrationId}}",
+    "FAILED_ACCESSING_DB": "Incapaz de acessar as migrations na base de dados",
+    "FINISHING_MIGRATIONS": "===== Finalizando migrations ====="
+  },
+  "PLAN": {
+    "ALREADY_HAVE_PLAN": "Usuário já possui um plano ativo",
+    "NO_ACTIVE_PLAN": "User não possui um plano ativo para atualizar",
+    "DEACTIVATED": "Plano desativado com sucesso",
+    "UPDATED": "Plano atualizado com sucesso",
+    "REGISTERED": "Plano registrado com sucesso"
+  },
+  "TASK": {
+    "REGISTERED": "Tarefa criada com sucesso",
+    "NOT_FOUND": "Tarefa não encontrada",
+    "UPDATED": "Tarefa atualizada com sucesso",
+    "DELETED": "Tarefa deletada com sucesso"
+  }
+}

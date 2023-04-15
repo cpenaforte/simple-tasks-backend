@@ -1,0 +1,49 @@
+{
+  "LOGIN": {
+    "WRONG_CREDENTIALS": "Wrong email and/or password"
+  },
+  "SYSTEM": {
+    "INTERNAL_ERROR": "Internal server error",
+    "EXECUTING_METHOD": "{{time}}: Executing method {{method}} on {{- url}}",
+    "RUNNING_PORT": "App running on port {{port}}"
+  },
+  "INFO": "Node.js, Express and Postgres API",
+  "TOKEN": {
+    "AUTH_FAILED": "Token auth failed"
+  },
+  "SIGNUP": {
+    "UNFILLED_FIELDS": "Fill the required fields",
+    "UNMATCHED_PASSWORDS": "The provided passwords don't match",
+    "EMAIL_EXISTS": "The provided email is already registered",
+    "REGISTERED_SUCCESSFULLY": "Registered successfully"
+  },
+  "USER_UPDATE": {
+    "ID_NOT_FOUND": "User ID not found",
+    "UPDATED_SUCCESSFULLY": "Updated user successfully"
+  },
+  "MIGRATION": {
+    "RUNNED_SUCCESSFULLY": "Runned migration {{migrationId}} successfully",
+    "FAILED_RUNNING": "Unable to migrate {{migrationId}}",
+    "STARTING_MIGRATIONS": "===== Starting migrations =====",
+    "FAILED_FETCHING": "Unable to fetch migration {{migrationId}}",
+    "FAILED_INSERTING": "Error inserting migration {{migrationId}} in db. Insert manually",
+    "FAILED_UPDATING": "Error updating migration {{migrationId}} in db. Update manually",
+    "REMOVED_SUCCESSFULLY": "Migration {{migrationId}} removed successfully",
+    "FAILED_REMOVING": "Error removing migration {{migrationId}}",
+    "FAILED_ACCESSING_DB": "Unable to check migrations from database",
+    "FINISHING_MIGRATIONS": "===== Migrations finished ====="
+  },
+  "PLAN": {
+    "ALREADY_HAVE_PLAN": "User aready have an active plan",
+    "NO_ACTIVE_PLAN": "User don't have an active plan to update",
+    "DEACTIVATED": "Deactivated plan succesfully",
+    "UPDATED": "Updated plan succesfully",
+    "REGISTERED": "Registered plan succesfully"
+  },
+  "TASK": {
+    "REGISTERED": "Registered task successfully",
+    "NOT_FOUND": "Task not found",
+    "UPDATED": "Task updated successfully",
+    "DELETED": "Task deleted succesfully"
+  }
+}
