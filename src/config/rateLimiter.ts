@@ -5,6 +5,7 @@ import {
   IRateLimiterStoreNoAutoExpiryOptions, RateLimiterPostgres,
 } from 'rate-limiter-flexible';
 import pool from './pg';
+import i18n from 'i18next';
 
 const options: IRateLimiterStoreNoAutoExpiryOptions = {
   storeClient: pool,
@@ -24,6 +25,8 @@ export default (req: Request, res: Response, next: NextFunction): void => {
       next();
     })
     .catch(() => {
-      res.status(429).json({ message: process.env.TOO_MANY_REQUESTS_MESSAGE });
+      res.status(429).json({
+        message: i18n.t('WARNING.TOO_MANY_REQUESTS'), hasError: true,
+      });
     });
 };

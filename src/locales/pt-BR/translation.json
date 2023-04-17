@@ -7,6 +7,9 @@
     "EXECUTING_METHOD": "{{time}}: Executando método {{method}} em {{- url}}",
     "RUNNING_PORT": "App rodando na porta {{port}}"
   },
+  "WARNING": {
+    "TOO_MANY_REQUESTS": "Foram feitas muitas requisições em pouco tempo, tente novamente mais tarde"
+  },
   "INFO": "API utilizando Node.js, Express e Postgres",
   "TOKEN": {
     "AUTH_FAILED": "A autenticação do token falhou",
