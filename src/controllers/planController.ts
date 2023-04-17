@@ -1,7 +1,7 @@
 import {
   Request, Response,
 } from 'express';
-import { DefaultTFuncReturn } from 'i18next';
+import i18n, { DefaultTFuncReturn } from 'i18next';
 /* eslint-disable no-unused-vars */
 import {
   fetchPlans,
@@ -30,33 +30,46 @@ export const getPlanByTitle = async (request: Request, response: Response): Prom
   const { title } = request.params;
   const { token } = request.body;
 
-  await fetchPlanByTitle(
-    token,
-    title,
-    (user: object) => response.status(200).json({
-      user, hasError: false,
-    }),
-    (message: string | object | DefaultTFuncReturn) => response.status(403).json({
-      message, hasError: true,
-    }));
+  if (typeof title === 'string') {
+    await fetchPlanByTitle(
+      token,
+      title,
+      (user: object) => response.status(200).json({
+        user, hasError: false,
+      }),
+      (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+        message, hasError: true,
+      }));
+  } else {
+    response.status(403).json({
+      message: i18n.t('PLAN.INVALID_TITLE'), hasError: true,
+    });
+  }
 };
 
 export const getUserPlanByUserId = async (request: Request, response: Response): Promise<void> => {
-  const userId: number = parseInt(request.params.id);
+  const strUserId = request.params.id;
+  if (typeof strUserId === 'string') {
+    const userId: number = parseInt(strUserId);
 
-  const {
-    token,
-  } = request.body;
+    const {
+      token,
+    } = request.body;
 
-  await fetchUserPlanByUserId(
-    token,
-    userId,
-    (user: object) => response.status(200).json({
-      user, hasError: false,
-    }),
-    (message: string | object | DefaultTFuncReturn) => response.status(403).json({
-      message, hasError: true,
-    }));
+    await fetchUserPlanByUserId(
+      token,
+      userId,
+      (user: object) => response.status(200).json({
+        user, hasError: false,
+      }),
+      (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+        message, hasError: true,
+      }));
+  } else {
+    response.status(403).json({
+      message: i18n.t('USER.INVALID_ID'), hasError: true,
+    });
+  }
 };
 
 export const createUserPlan = async (request: Request, response: Response): Promise<void> => {
@@ -70,7 +83,7 @@ export const createUserPlan = async (request: Request, response: Response): Prom
     (answer: string | object | DefaultTFuncReturn) => response.status(201).json({
       message: answer, hasError: false,
     }),
-    (message: string| object | DefaultTFuncReturn) => response.status(403).json({
+    (message: string | object | DefaultTFuncReturn) => response.status(403).json({
       message, hasError: true,
     }));
 };
@@ -92,16 +105,23 @@ export const updateUserPlan = async (request: Request, response: Response): Prom
 };
 
 export const deactivateUserPlanByUserId = async (request: Request, response: Response): Promise<void> => {
-  const id: number = parseInt(request.params.id);
-  const { token } = request.body;
+  const strUserId = request.params.id;
+  if (typeof strUserId === 'string') {
+    const userId: number = parseInt(strUserId);
+    const { token } = request.body;
 
-  await deactivateUserPlan(
-    token,
-    id,
-    (answer: string | object | DefaultTFuncReturn) => response.status(202).json({
-      message: answer, hasError: false,
-    }),
-    (message: object | DefaultTFuncReturn) => response.status(403).json({
-      message, hasError: true,
-    }));
+    await deactivateUserPlan(
+      token,
+      userId,
+      (answer: string | object | DefaultTFuncReturn) => response.status(202).json({
+        message: answer, hasError: false,
+      }),
+      (message: object | DefaultTFuncReturn) => response.status(403).json({
+        message, hasError: true,
+      }));
+  } else {
+    response.status(403).json({
+      message: i18n.t('USER.INVALID_ID'), hasError: true,
+    });
+  }
 };

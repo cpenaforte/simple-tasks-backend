@@ -9,7 +9,8 @@
   },
   "INFO": "Node.js, Express and Postgres API",
   "TOKEN": {
-    "AUTH_FAILED": "Token auth failed"
+    "AUTH_FAILED": "Token auth failed",
+    "NOT_FOUND": "Token not found, verify environment variables"
   },
   "SIGNUP": {
     "UNFILLED_FIELDS": "Fill the required fields",
@@ -17,7 +18,8 @@
     "EMAIL_EXISTS": "The provided email is already registered",
     "REGISTERED_SUCCESSFULLY": "Registered successfully"
   },
-  "USER_UPDATE": {
+  "USER": {
+    "INVALID_ID": "Invalid user ID",
     "ID_NOT_FOUND": "User ID not found",
     "UPDATED_SUCCESSFULLY": "Updated user successfully"
   },
@@ -34,6 +36,7 @@
     "FINISHING_MIGRATIONS": "===== Migrations finished ====="
   },
   "PLAN": {
+    "INVALID_TITLE": "Invalid plan title",
     "ALREADY_HAVE_PLAN": "User aready have an active plan",
     "NO_ACTIVE_PLAN": "User don't have an active plan to update",
     "DEACTIVATED": "Deactivated plan succesfully",
@@ -41,6 +44,7 @@
     "REGISTERED": "Registered plan succesfully"
   },
   "TASK": {
+    "INVALID_ID": "Invalid task ID",
     "REGISTERED": "Registered task successfully",
     "NOT_FOUND": "Task not found",
     "UPDATED": "Task updated successfully",

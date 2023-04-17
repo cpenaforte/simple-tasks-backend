@@ -5,7 +5,7 @@
     "module": "commonjs",                                /* Specify what module code is generated. */
     "rootDir": "src",                                    /* Specify the root folder within your source files. */
     "resolveJsonModule": true,                           /* Enable importing .json files. */
-    "allowJs": true,                                     /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */
+    "allowJs": false,                                     /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */
     "outDir": "build",                                   /* Specify an output folder for all emitted files. */
     "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
     "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
@@ -13,6 +13,22 @@
     "noImplicitAny": true,                               /* Enable error reporting for expressions and declarations with an implied 'any' type. */
     "strictFunctionTypes": true,                      /* When assigning functions, check to ensure parameters and the return values are subtype-compatible. */
     "noImplicitThis": true,                           /* Enable error reporting when 'this' is given the type 'any'. */
-    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
+    "skipLibCheck": false,                                 /* Skip type checking all .d.ts files. */
+    "alwaysStrict": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": true,
+    "importHelpers": true,
+    "extendedDiagnostics": true,
+    "diagnostics": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "strictBindCallApply": true
   },
 }

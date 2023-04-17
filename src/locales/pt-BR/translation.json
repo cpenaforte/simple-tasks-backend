@@ -9,7 +9,8 @@
   },
   "INFO": "API utilizando Node.js, Express e Postgres",
   "TOKEN": {
-    "AUTH_FAILED": "A autenticação do token falhou"
+    "AUTH_FAILED": "A autenticação do token falhou",
+    "NOT_FOUND": "Token não encontrado, verifique as variáveis de ambiente"
   },
   "SIGNUP": {
     "UNFILLED_FIELDS": "Preencha os campos obrigatórios",
@@ -17,8 +18,9 @@
     "EMAIL_EXISTS": "Esse email já está cadastrado",
     "REGISTERED_SUCCESSFULLY": "Cadastrado com sucesso"
   },
-  "USER_UPDATE": {
-    "ID_NOT_FOUND": "ID de usuário não encontrada",
+  "USER": {
+    "INVALID_ID": "ID do usuário inválido",
+    "ID_NOT_FOUND": "ID do usuário não encontrada",
     "UPDATED_SUCCESSFULLY": "Usuário atualizado com sucesso"
   },
   "MIGRATION": {
@@ -34,6 +36,7 @@
     "FINISHING_MIGRATIONS": "===== Finalizando migrations ====="
   },
   "PLAN": {
+    "INVALID_TITLE": "Título do plano invalido",
     "ALREADY_HAVE_PLAN": "Usuário já possui um plano ativo",
     "NO_ACTIVE_PLAN": "User não possui um plano ativo para atualizar",
     "DEACTIVATED": "Plano desativado com sucesso",
@@ -41,6 +44,7 @@
     "REGISTERED": "Plano registrado com sucesso"
   },
   "TASK": {
+    "INVALID_ID": "ID da tarefa inválido",
     "REGISTERED": "Tarefa criada com sucesso",
     "NOT_FOUND": "Tarefa não encontrada",
     "UPDATED": "Tarefa atualizada com sucesso",

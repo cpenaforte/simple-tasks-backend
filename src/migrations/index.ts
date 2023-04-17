@@ -36,21 +36,21 @@ export default async () => {
     files.forEach(async (file: string) => {
       const file_id: string = file.substring(0, 15);
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const migration: (client: PoolClient) => void = require('./queries/'+file);
+      const migration: (client: PoolClient) => void = require('./queries/' + file);
       const { mtime } = fs.statSync('./src/migrations/queries/' + file);
 
       const dbMigration: void | QueryResult<{
-          migration_id: string, last_modified: Date
-        }> = await client.query(
-          'Select * from migrations where migration_id = $1',
-          [file_id],
-        ).catch(async (error: unknown) => {
-          console.log(i18n.t('MIGRATION.FAILED_FETCHING', { migrationId: file_id }));
-          await client.query('ROLLBACK');
-          if (error instanceof Error) {
-            throw new Error(error.message);
-          }
-        });
+        migration_id: string, last_modified: Date
+      }> = await client.query(
+        'Select * from migrations where migration_id = $1',
+        [file_id],
+      ).catch(async (error: unknown) => {
+        console.log(i18n.t('MIGRATION.FAILED_FETCHING', { migrationId: file_id }));
+        await client.query('ROLLBACK');
+        if (error instanceof Error) {
+          throw new Error(error.message);
+        }
+      });
 
       if (!dbMigration) {
         return;
@@ -72,7 +72,7 @@ export default async () => {
           }
         }
       } else {
-        if (dbMigration.rows[0].last_modified.getTime() !== mtime.getTime()) {
+        if (dbMigration.rows[0] && dbMigration.rows[0].last_modified.getTime() !== mtime.getTime()) {
           await runMigration(file_id, migration, client);
 
           try {

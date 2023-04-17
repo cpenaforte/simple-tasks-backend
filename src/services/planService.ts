@@ -10,12 +10,12 @@ import i18n, { DefaultTFuncReturn } from 'i18next';
 export const fetchPlans = async (
   token: string,
   onSuccess: (message: object) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
     await client.query('BEGIN');
-    jwt.verify(token, process.env.TOKEN_KEY, async (e, decoded) => {
+    jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
       if (e) {
         onError({
           auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
@@ -43,6 +43,8 @@ export const fetchPlans = async (
       });
     });
     client.release();
+  } else {
+    onError(i18n.t('TOKEN.NOT_FOUND'));
   }
 };
 
@@ -50,12 +52,12 @@ export const fetchPlanByTitle = async (
   token: string,
   planTitle: string,
   onSuccess: (message: object) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
     await client.query('BEGIN');
-    jwt.verify(token, process.env.TOKEN_KEY, async (e, decoded) => {
+    jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
       if (e) {
         onError({
           auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
@@ -85,6 +87,8 @@ export const fetchPlanByTitle = async (
       });
     });
     client.release();
+  } else {
+    onError(i18n.t('TOKEN.NOT_FOUND'));
   }
 };
 
@@ -92,12 +96,12 @@ export const fetchUserPlanByUserId = async (
   token: string,
   userId: number,
   onSuccess: (message: object) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
     await client.query('BEGIN');
-    jwt.verify(token, process.env.TOKEN_KEY, async (e, decoded) => {
+    jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
       if (e) {
         onError({
           auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
@@ -127,19 +131,21 @@ export const fetchUserPlanByUserId = async (
       });
     });
     client.release();
+  } else {
+    onError(i18n.t('TOKEN.NOT_FOUND'));
   }
 };
 
 export const insertUserPlan = async (
   token: string,
-  plan: { planId: number, userId: number, startDate: Date, endDate: Date | null},
+  plan: { planId: number, userId: number, startDate: Date, endDate: Date | null },
   onSuccess: (message: DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
     await client.query('BEGIN');
-    jwt.verify(token, process.env.TOKEN_KEY, async (e, decoded) => {
+    jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
       if (e) {
         onError({
           auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
@@ -161,7 +167,7 @@ export const insertUserPlan = async (
 
         client.query('INSERT INTO user_plans (plan_id, user_id, start_date, end_Date) values ($1,$2,$3,$4,$5)', [
           planId, userId, startDate, endDate,
-        ], async (error, results) => {
+        ], async (error, _results) => {
           if (error) {
             onError(error.message);
             await client.query('ROLLBACK');
@@ -171,22 +177,24 @@ export const insertUserPlan = async (
           onSuccess(i18n.t('PLAN.REGISTERED'));
           await client.query('COMMIT');
         });
-      }, (message: string | object) => onError(message));
+      }, (message: string | object | DefaultTFuncReturn) => onError(message));
     });
     client.release();
+  } else {
+    onError(i18n.t('TOKEN.NOT_FOUND'));
   }
 };
 
 export const patchUserPlan = async (
   token: string,
-  plan: { planId: number, userId: number, startDate: Date, endDate: Date | null},
+  plan: { planId: number, userId: number, startDate: Date, endDate: Date | null },
   onSuccess: (message: DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
     await client.query('BEGIN');
-    jwt.verify(token, process.env.TOKEN_KEY, async (e, decoded) => {
+    jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
       if (e) {
         onError({
           auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
@@ -208,7 +216,7 @@ export const patchUserPlan = async (
 
         client.query('UPDATE user_plans SET (plan_id, user_id, start_date, end_Date) = ($1,$2,$3,$4,$5) WHERE user_id = $6', [
           planId, userId, startDate, endDate, userId,
-        ], async (error, results) => {
+        ], async (error, _results) => {
           if (error) {
             onError(error.message);
             await client.query('ROLLBACK');
@@ -218,9 +226,11 @@ export const patchUserPlan = async (
           onSuccess(i18n.t('PLAN.UPDATED'));
           await client.query('COMMIT');
         });
-      }, (message: string | object) => onError(message));
+      }, (message: string | object | DefaultTFuncReturn) => onError(message));
     });
     client.release();
+  } else {
+    onError(i18n.t('TOKEN.NOT_FOUND'));
   }
 };
 
@@ -233,7 +243,7 @@ export const deactivateUserPlan = async (
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
     await client.query('BEGIN');
-    jwt.verify(token, process.env.TOKEN_KEY, async (e, decoded) => {
+    jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
       if (e) {
         onError({
           auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
@@ -249,7 +259,7 @@ export const deactivateUserPlan = async (
           return;
         }
 
-        client.query('UPDATE user_plans SET plan_id = 1 WHERE user_id = $1', [userId], async (error, results) => {
+        client.query('UPDATE user_plans SET plan_id = 1 WHERE user_id = $1', [userId], async (error, _results) => {
           if (error) {
             onError(error.message);
             await client.query('ROLLBACK');
@@ -259,8 +269,10 @@ export const deactivateUserPlan = async (
           onSuccess(i18n.t('PLAN.DEACTIVATED'));
           await client.query('COMMIT');
         });
-      }, (message: string | object) => onError(message));
+      }, (message: string | object | DefaultTFuncReturn) => onError(message));
     });
     client.release();
+  } else {
+    onError(i18n.t('TOKEN.NOT_FOUND'));
   }
 };
