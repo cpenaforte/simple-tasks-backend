@@ -1,6 +1,7 @@
 import { ReceivedUser } from '../models/user';
 import { ReceivedTask } from '../models/task';
 import { UserPlan } from '../models/plan';
+import { Project } from '../models/project';
 
 export function isReceivedUser(object: any): object is ReceivedUser {
   return (
@@ -28,5 +29,13 @@ export function isUserPlan(object: any): object is UserPlan {
     typeof object?.user_id === 'number'
         && typeof object?.plan_id === 'number'
         && typeof object?.start_date === 'string'
+  );
+}
+
+export function isProject(object: any): object is Project {
+  return (
+    typeof object?.project_id === 'number'
+        && typeof object?.user_id === 'number'
+        && typeof object?.name === 'string'
   );
 }

@@ -23,13 +23,14 @@ const runMigration = async (
     }
   }
 };
-
-export default async () => {
+const migrate = async () => {
   const client: PoolClient = await pool.connect();
 
   try {
     await client.query('BEGIN');
     console.log(i18n.t('MIGRATION.STARTING_MIGRATIONS'));
+    await client.query('CREATE TABLE IF NOT EXISTS migrations (migration_id varchar(20) primary key, last_modified timestamp not null)');
+
     const files: Array<string> = fs.readdirSync('./src/migrations/queries');
     files.sort();
 
@@ -138,3 +139,5 @@ export default async () => {
     client.release();
   }
 };
+
+export default migrate;

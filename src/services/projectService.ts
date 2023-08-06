@@ -6,13 +6,13 @@ import { PoolClient } from 'pg';
 import { Response } from 'express';
 import i18n, { DefaultTFuncReturn } from 'i18next';
 import {
-  ReceivedTask, Task,
-} from '../models/task';
+  Project,
+} from '../models/project';
 
-export const fetchUserTasks = async (
+export const fetchUserProjects = async (
   token: string,
   userId: number,
-  onSuccess: (message: Task[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: Project[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
@@ -28,7 +28,7 @@ export const fetchUserTasks = async (
       }
 
       client.query(
-        'SELECT * FROM tasks WHERE user_id = $1 ORDER BY creation_date DESC',
+        'SELECT * FROM projects WHERE user_id = $1 ORDER BY creation_date DESC',
         [userId],
         async (error, results) => {
           if (error) {
@@ -47,47 +47,10 @@ export const fetchUserTasks = async (
   }
 };
 
-export const fetchSharedTasks = async (
+export const fetchSingleProject = async (
   token: string,
-  userId: number,
-  onSuccess: (message: Task[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
-): Promise<void> => {
-  if (process.env.TOKEN_KEY) {
-    const client: PoolClient = await pool.connect();
-    await client.query('BEGIN');
-    jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
-      if (e) {
-        onError({
-          auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
-        });
-        await client.query('ROLLBACK');
-        return;
-      }
-      client.query(
-        'SELECT t.task_id, task_title, task_description, creation_date, due_date, done, cowork FROM shared_tasks st JOIN tasks t ON st.task_id = t.task_id WHERE st.user_id = $1 ORDER BY creation_date DESC',
-        [userId],
-        async (error, results) => {
-          if (error) {
-            onError(error.message);
-            await client.query('ROLLBACK');
-            return;
-          }
-
-          onSuccess(results.rows);
-          await client.query('COMMIT');
-        });
-    });
-    client.release();
-  } else {
-    onError(i18n.t('TOKEN.NOT_FOUND'));
-  }
-};
-
-export const fetchSingleTask = async (
-  token: string,
-  taskId: number,
-  onSuccess: (message: Task) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  projectId: number,
+  onSuccess: (message: Project) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
@@ -103,8 +66,8 @@ export const fetchSingleTask = async (
       }
 
       client.query(
-        'SELECT * FROM tasks WHERE task_id = $1 ORDER BY creation_date DESC',
-        [taskId],
+        'SELECT * FROM projects WHERE project_id = $1 ORDER BY creation_date DESC',
+        [projectId],
         async (error, results) => {
           if (error) {
             onError(error.message);
@@ -122,9 +85,9 @@ export const fetchSingleTask = async (
   }
 };
 
-export const insertTask = async (
+export const insertProject = async (
   token: string,
-  task: ReceivedTask,
+  project: Project,
   onSuccess: (message: DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
@@ -141,11 +104,11 @@ export const insertTask = async (
       }
 
       const {
-        user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done,
-      } = task;
+        project_id, user_id, name, description,
+      } = project;
 
-      client.query('INSERT INTO tasks (user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done) values ($1,$2,$3,$4,$5,$6,$7,$8)', [
-        user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done,
+      client.query('INSERT INTO projects (project_id, user_id, name, description) values ($1,$2,$3,$4)', [
+        project_id, user_id, name, description,
       ], async (error, _results) => {
         if (error) {
           onError(error.message);
@@ -153,7 +116,7 @@ export const insertTask = async (
           return;
         }
 
-        onSuccess(i18n.t('TASK.REGISTERED'));
+        onSuccess(i18n.t('PROJECT.REGISTERED'));
         await client.query('COMMIT');
       });
     });
@@ -163,10 +126,10 @@ export const insertTask = async (
   }
 };
 
-export const patchTask = async (
+export const patchProject = async (
   token: string,
-  taskId: number,
-  task: ReceivedTask,
+  projectId: number,
+  project: Project,
   onSuccess: (message: DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
@@ -183,18 +146,18 @@ export const patchTask = async (
       }
 
       const {
-        user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done,
-      } = task;
+        project_id, user_id, name, description,
+      } = project;
 
-      await fetchSingleTask(token, taskId, async (task) => {
-        if (!task) {
-          onError(i18n.t('TASK.NOT_FOUND'));
+      await fetchSingleProject(token, projectId, async (project) => {
+        if (!project) {
+          onError(i18n.t('PROJECT.NOT_FOUND'));
           await client.query('ROLLBACK');
           return;
         }
 
-        client.query('UPDATE tasks SET (user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done) = ($1,$2,$3,$4,$5,$6,$7,$8) WHERE task_id = $7', [
-          user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done,
+        client.query('UPDATE projects SET (project_id, user_id, name, description) = ($1,$2,$3) WHERE project_id = $4', [
+          user_id, name, description, project_id,
         ], async (error, _results) => {
           if (error) {
             onError(error.message);
@@ -202,7 +165,7 @@ export const patchTask = async (
             return;
           }
 
-          onSuccess(i18n.t('TASK.UPDATED'));
+          onSuccess(i18n.t('PROJECT.UPDATED'));
           await client.query('COMMIT');
         });
       }, (message: string | object | DefaultTFuncReturn) => onError(message));
@@ -213,9 +176,9 @@ export const patchTask = async (
   }
 };
 
-export const removeTask = async (
+export const removeProject = async (
   token: string,
-  taskId: number,
+  projectId: number,
   onSuccess: (message: DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
@@ -231,28 +194,28 @@ export const removeTask = async (
         return;
       }
 
-      await fetchSingleTask(token, taskId, async (task) => {
-        if (!task) {
-          onError(i18n.t('TASK.NOT_FOUND'));
+      await fetchSingleProject(token, projectId, async (project) => {
+        if (!project) {
+          onError(i18n.t('PROJECT.NOT_FOUND'));
           await client.query('ROLLBACK');
           return;
         }
 
-        await client.query('DELETE FROM tasks WHERE task_id = $1', [taskId])
+        await client.query('DELETE FROM projects WHERE project_id = $1', [projectId])
           .catch(async (error) => {
             onError(error.message);
             await client.query('ROLLBACK');
             return;
           });
 
-        await client.query('DELETE FROM shared_tasks WHERE task_id = $1', [taskId])
+        await client.query('DELETE FROM tasks WHERE project_id = $1', [projectId])
           .catch(async (error) => {
             onError(error.message);
             await client.query('ROLLBACK');
             return;
           });
 
-        onSuccess(i18n.t('TASK.DELETED'));
+        onSuccess(i18n.t('PROJECT.DELETED'));
         await client.query('COMMIT');
       }, (message: string | object | DefaultTFuncReturn) => onError(message));
     });

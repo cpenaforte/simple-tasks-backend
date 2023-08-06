@@ -4,8 +4,8 @@ export type Plan = {
     task_permission: 0 | 1;
     share_permission: 0 | 1;
     cowork_permission: 0 | 1;
-    readonly tasks_limit: number;
-    readonly share_limit: number;
+    readonly tasks_limit?: number;
+    readonly share_limit?: number;
 }
 
 export type UserPlan = {

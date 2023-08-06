@@ -1,8 +1,12 @@
 export type User = Omit<ReceivedUser, 'confirm_password'> & {
     readonly user_id: number;
     readonly user_password: string;
-    sex: Sex;
+    sex: Gender;
     birthday: Date;
+}
+
+export type UserToSend = Omit<User, 'user_password'> & {
+    birthday: string;
 }
 
 export type ReceivedUser = {
@@ -15,7 +19,7 @@ export type ReceivedUser = {
     confirm_password: string;
 }
 
-const enum Sex {
+const enum Gender {
     MALE = 'male',
     FEMALE = 'female',
 }

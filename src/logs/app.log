@@ -22,3 +22,93 @@ Error: Illegal arguments: undefined, string
     at Query.<anonymous> (/home/carlos/workspace/simple-tasks-api/simple-tasks-backend/src/services/loginService.ts:15:88)
     at Query.handleReadyForQuery (/home/carlos/workspace/simple-tasks-api/simple-tasks-backend/node_modules/pg/lib/query.js:139:14)
     at Client._handleReadyForQuery (/home/carlos/workspace/simple-tasks-api/simple-tasks-backend/node_modules/pg/lib/client.js:290:19)
+06/08/2023 19:11:06: error: uncaughtException: relation "migrations" does not exist
+Error: relation "migrations" does not exist
+    at /home/carlos/workspace/simple-tasks-backend/src/migrations/index.ts:51:17
+    at step (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:141:27)
+    at Object.next (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:122:57)
+    at fulfilled (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:112:62)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+06/08/2023 19:14:57: error: uncaughtException: current transaction is aborted, commands ignored until end of transaction block
+error: current transaction is aborted, commands ignored until end of transaction block
+    at Parser.parseErrorMessage (/home/carlos/workspace/simple-tasks-backend/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/home/carlos/workspace/simple-tasks-backend/node_modules/pg-protocol/src/parser.ts:188:21)
+    at Parser.parse (/home/carlos/workspace/simple-tasks-backend/node_modules/pg-protocol/src/parser.ts:103:30)
+    at Socket.<anonymous> (/home/carlos/workspace/simple-tasks-backend/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:514:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:324:12)
+    at readableAddChunk (node:internal/streams/readable:297:9)
+    at Socket.Readable.push (node:internal/streams/readable:234:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+06/08/2023 19:15:31: error: uncaughtException: current transaction is aborted, commands ignored until end of transaction block
+error: current transaction is aborted, commands ignored until end of transaction block
+    at Parser.parseErrorMessage (/home/carlos/workspace/simple-tasks-backend/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/home/carlos/workspace/simple-tasks-backend/node_modules/pg-protocol/src/parser.ts:188:21)
+    at Parser.parse (/home/carlos/workspace/simple-tasks-backend/node_modules/pg-protocol/src/parser.ts:103:30)
+    at Socket.<anonymous> (/home/carlos/workspace/simple-tasks-backend/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:514:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:324:12)
+    at readableAddChunk (node:internal/streams/readable:297:9)
+    at Socket.Readable.push (node:internal/streams/readable:234:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+06/08/2023 19:16:19: error: uncaughtException: current transaction is aborted, commands ignored until end of transaction block
+error: current transaction is aborted, commands ignored until end of transaction block
+    at Parser.parseErrorMessage (/home/carlos/workspace/simple-tasks-backend/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/home/carlos/workspace/simple-tasks-backend/node_modules/pg-protocol/src/parser.ts:188:21)
+    at Parser.parse (/home/carlos/workspace/simple-tasks-backend/node_modules/pg-protocol/src/parser.ts:103:30)
+    at Socket.<anonymous> (/home/carlos/workspace/simple-tasks-backend/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:514:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:324:12)
+    at readableAddChunk (node:internal/streams/readable:297:9)
+    at Socket.Readable.push (node:internal/streams/readable:234:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+06/08/2023 19:17:28: error: uncaughtException: relation "migrations" does not exist
+Error: relation "migrations" does not exist
+    at /home/carlos/workspace/simple-tasks-backend/src/migrations/index.ts:145:13
+    at step (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:141:27)
+    at Object.next (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:122:57)
+    at fulfilled (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:112:62)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+06/08/2023 19:18:50: error: uncaughtException: relation "migrations" does not exist
+Error: relation "migrations" does not exist
+    at /home/carlos/workspace/simple-tasks-backend/src/migrations/index.ts:143:13
+    at step (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:141:27)
+    at Object.next (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:122:57)
+    at fulfilled (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:112:62)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+06/08/2023 19:20:44: error: uncaughtException: relation "migrations" does not exist
+Error: relation "migrations" does not exist
+    at /home/carlos/workspace/simple-tasks-backend/src/migrations/index.ts:144:13
+    at step (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:141:27)
+    at Object.next (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:122:57)
+    at fulfilled (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:112:62)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+06/08/2023 19:22:37: error: uncaughtException: current transaction is aborted, commands ignored until end of transaction block
+error: current transaction is aborted, commands ignored until end of transaction block
+    at Parser.parseErrorMessage (/home/carlos/workspace/simple-tasks-backend/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/home/carlos/workspace/simple-tasks-backend/node_modules/pg-protocol/src/parser.ts:188:21)
+    at Parser.parse (/home/carlos/workspace/simple-tasks-backend/node_modules/pg-protocol/src/parser.ts:103:30)
+    at Socket.<anonymous> (/home/carlos/workspace/simple-tasks-backend/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:514:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:324:12)
+    at readableAddChunk (node:internal/streams/readable:297:9)
+    at Socket.Readable.push (node:internal/streams/readable:234:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+06/08/2023 19:23:36: error: uncaughtException: relation "migrations" does not exist
+Error: relation "migrations" does not exist
+    at /home/carlos/workspace/simple-tasks-backend/src/migrations/index.ts:144:13
+    at step (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:141:27)
+    at Object.next (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:122:57)
+    at fulfilled (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:112:62)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+06/08/2023 19:25:27: error: uncaughtException: relation "migrations" does not exist
+Error: relation "migrations" does not exist
+    at /home/carlos/workspace/simple-tasks-backend/src/migrations/index.ts:148:13
+    at step (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:141:27)
+    at Object.next (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:122:57)
+    at fulfilled (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:112:62)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)

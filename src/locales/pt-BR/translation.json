@@ -60,5 +60,13 @@
     "NOT_FOUND": "Tarefa não encontrada",
     "UPDATED": "Tarefa atualizada com sucesso",
     "DELETED": "Tarefa deletada com sucesso"
+  },
+  "PROJECT": {
+    "INVALID_ID": "ID do projeto inválido",
+    "REGISTERED": "Projeto criado com sucesso",
+    "WRONG_TYPE": "O projeto passado não é do tipo correto",
+    "NOT_FOUND": "Projeto não encontrado",
+    "UPDATED": "Projeto atualizado com sucesso",
+    "DELETED": "Projeto deletado com sucesso"
   }
 }

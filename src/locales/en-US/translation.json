@@ -60,5 +60,13 @@
     "NOT_FOUND": "Task not found",
     "UPDATED": "Task updated successfully",
     "DELETED": "Task deleted succesfully"
+  },
+  "PROJECT": {
+    "INVALID_ID": "Invalid project ID",
+    "WRONG_TYPE": "Project passed hasn't the correct type",
+    "REGISTERED": "Registered project successfully",
+    "NOT_FOUND": "Project not found",
+    "UPDATED": "Project updated successfully",
+    "DELETED": "Project deleted succesfully"
   }
 }

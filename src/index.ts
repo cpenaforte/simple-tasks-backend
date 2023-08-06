@@ -12,6 +12,7 @@ import userRoutes from './routes/userRoutes';
 import loginRoutes from './routes/loginRoutes';
 import planRoutes from './routes/planRoutes';
 import taskRoutes from './routes/taskRoutes';
+import projectRoutes from './routes/projectRoutes';
 
 import i18next from 'i18next';
 import Backend from 'i18next-fs-backend';
@@ -62,4 +63,6 @@ migrate().then(() => {
   app.use('/api/v1/plans', planRoutes);
 
   app.use('/api/v1/tasks', taskRoutes);
+
+  app.use('/api/v1/projects', projectRoutes);
 });
