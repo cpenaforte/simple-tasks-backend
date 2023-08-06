@@ -13,7 +13,7 @@
   "INFO": "API utilizando Node.js, Express e Postgres",
   "TOKEN": {
     "AUTH_FAILED": "A autenticação do token falhou",
-    "NOT_FOUND": "Token não encontrado, verifique as variáveis de ambiente"
+    "NOT_FOUND": "Token não encontrado, verifique os headers da requisição"
   },
   "SIGNUP": {
     "UNFILLED_FIELDS": "Preencha os campos obrigatórios",
@@ -24,6 +24,8 @@
   "USER": {
     "INVALID_ID": "ID do usuário inválido",
     "ID_NOT_FOUND": "ID do usuário não encontrada",
+    "WRONG_TYPE": "O usuário passado não tem o tipo correto",
+    "NOT_FOUND": "Usuário não encontrado",
     "UPDATED_SUCCESSFULLY": "Usuário atualizado com sucesso"
   },
   "MIGRATION": {
@@ -40,15 +42,21 @@
   },
   "PLAN": {
     "INVALID_TITLE": "Título do plano invalido",
+    "NOT_FOUND": "Plano não encontrado",
     "ALREADY_HAVE_PLAN": "Usuário já possui um plano ativo",
     "NO_ACTIVE_PLAN": "User não possui um plano ativo para atualizar",
     "DEACTIVATED": "Plano desativado com sucesso",
     "UPDATED": "Plano atualizado com sucesso",
     "REGISTERED": "Plano registrado com sucesso"
   },
+  "USER_PLAN": {
+    "WRONG_TYPE": "O plano de usuário passado não é do tipo correto",
+    "NOT_FOUND": "Plano de usuário não encontrado"
+  },
   "TASK": {
     "INVALID_ID": "ID da tarefa inválido",
     "REGISTERED": "Tarefa criada com sucesso",
+    "WRONG_TYPE": "A tarefa passada não é do tipo correto",
     "NOT_FOUND": "Tarefa não encontrada",
     "UPDATED": "Tarefa atualizada com sucesso",
     "DELETED": "Tarefa deletada com sucesso"

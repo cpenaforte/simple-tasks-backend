@@ -5,11 +5,14 @@ import pool from '../config/pg';
 import { PoolClient } from 'pg';
 import { Response } from 'express';
 import i18n, { DefaultTFuncReturn } from 'i18next';
+import {
+  ReceivedTask, Task,
+} from '../models/task';
 
 export const fetchUserTasks = async (
   token: string,
   userId: number,
-  onSuccess: (message: object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: Task[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
@@ -47,7 +50,7 @@ export const fetchUserTasks = async (
 export const fetchSharedTasks = async (
   token: string,
   userId: number,
-  onSuccess: (message: object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: Task[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
@@ -84,7 +87,7 @@ export const fetchSharedTasks = async (
 export const fetchSingleTask = async (
   token: string,
   taskId: number,
-  onSuccess: (message: object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: Task) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
@@ -121,7 +124,7 @@ export const fetchSingleTask = async (
 
 export const insertTask = async (
   token: string,
-  task: { userId: number, taskTitle: string, taskDescription: string, creationDate: Date, dueDate: Date | null, done: number },
+  task: ReceivedTask,
   onSuccess: (message: DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
@@ -138,11 +141,11 @@ export const insertTask = async (
       }
 
       const {
-        userId, taskTitle, taskDescription, creationDate, dueDate, done,
+        user_id, task_title, task_description, creation_date, due_date, urgency, done,
       } = task;
 
-      client.query('INSERT INTO tasks (user_id, task_title, task_description, creation_date, due_date, done) values ($1,$2,$3,$4,$5,$6)', [
-        userId, taskTitle, taskDescription, creationDate, dueDate, done,
+      client.query('INSERT INTO tasks (user_id, task_title, task_description, creation_date, due_date, urgency, done) values ($1,$2,$3,$4,$5,$6)', [
+        user_id, task_title, task_description, creation_date, due_date, urgency, done,
       ], async (error, _results) => {
         if (error) {
           onError(error.message);
@@ -163,7 +166,7 @@ export const insertTask = async (
 export const patchTask = async (
   token: string,
   taskId: number,
-  task: { userId: number, taskTitle: string, taskDescription: string, creationDate: Date, dueDate: Date | null, done: number },
+  task: ReceivedTask,
   onSuccess: (message: DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
@@ -180,7 +183,7 @@ export const patchTask = async (
       }
 
       const {
-        userId, taskTitle, taskDescription, creationDate, dueDate, done,
+        user_id, task_title, task_description, creation_date, due_date, urgency, done,
       } = task;
 
       await fetchSingleTask(token, taskId, async (task) => {
@@ -190,8 +193,8 @@ export const patchTask = async (
           return;
         }
 
-        client.query('UPDATE tasks SET (user_id, task_title, task_description, creation_date, due_date, done) = ($1,$2,$3,$4,$5,$6) WHERE task_id = $7', [
-          userId, taskTitle, taskDescription, creationDate, dueDate, done, taskId,
+        client.query('UPDATE tasks SET (user_id, task_title, task_description, creation_date, due_date, urgency, done) = ($1,$2,$3,$4,$5,$6) WHERE task_id = $7', [
+          user_id, task_title, task_description, creation_date, due_date, urgency, done,
         ], async (error, _results) => {
           if (error) {
             onError(error.message);

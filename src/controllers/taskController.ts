@@ -11,19 +11,29 @@ import {
   patchTask,
   removeTask,
 } from '../services/taskService';
+import { isReceivedTask } from '../utils/typeCheck';
+import { Task } from '../models/task';
 
 
 export const getTasks = async (request: Request, response: Response): Promise<void> => {
   const strUserId = request.params.id;
   if (typeof strUserId === 'string') {
     const userId = parseInt(strUserId);
-    const { token } = request.body;
+
+    const { token } = request.headers;
+    if (typeof token !== 'string') {
+      response.status(404).json({
+        message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
+      });
+
+      return;
+    }
 
     await fetchUserTasks(
       token,
       userId,
-      (users: object) => response.status(200).json({
-        users, hasError: false,
+      (tasks: Task[]) => response.status(200).json({
+        tasks, hasError: false,
       }),
       (message: string | object | DefaultTFuncReturn) => response.status(403).json({
         message, hasError: true,
@@ -39,13 +49,21 @@ export const getSharedTasks = async (request: Request, response: Response): Prom
   const strUserId = request.params.id;
   if (typeof strUserId === 'string') {
     const userId = parseInt(strUserId);
-    const { token } = request.body;
+
+    const { token } = request.headers;
+    if (typeof token !== 'string') {
+      response.status(404).json({
+        message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
+      });
+
+      return;
+    }
 
     await fetchSharedTasks(
       token,
       userId,
-      (user: object) => response.status(200).json({
-        user, hasError: false,
+      (tasks: Task[]) => response.status(200).json({
+        tasks, hasError: false,
       }),
       (message: string | object | DefaultTFuncReturn) => response.status(403).json({
         message, hasError: true,
@@ -62,15 +80,20 @@ export const getSingleTask = async (request: Request, response: Response): Promi
   if (typeof strTaskId === 'string') {
     const taskId: number = parseInt(strTaskId);
 
-    const {
-      token,
-    } = request.body;
+    const { token } = request.headers;
+    if (typeof token !== 'string') {
+      response.status(404).json({
+        message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
+      });
+
+      return;
+    }
 
     await fetchSingleTask(
       token,
       taskId,
-      (user: object) => response.status(200).json({
-        user, hasError: false,
+      (task: Task) => response.status(200).json({
+        task, hasError: false,
       }),
       (message: string | object | DefaultTFuncReturn) => response.status(403).json({
         message, hasError: true,
@@ -83,9 +106,23 @@ export const getSingleTask = async (request: Request, response: Response): Promi
 };
 
 export const createTask = async (request: Request, response: Response): Promise<void> => {
-  const {
-    token, task,
-  } = request.body;
+  const { token } = request.headers;
+  if (typeof token !== 'string') {
+    response.status(404).json({
+      message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
+    });
+
+    return;
+  }
+
+  const { task } = request.body;
+  if (!isReceivedTask(task)) {
+    response.status(403).json({
+      message: i18n.t('TASK.WRONG_TYPE'), hasError: true,
+    });
+
+    return;
+  }
 
   await insertTask(
     token,
@@ -103,9 +140,23 @@ export const updateTask = async (request: Request, response: Response): Promise<
   if (typeof strTaskId === 'string') {
     const taskId: number = parseInt(strTaskId);
 
-    const {
-      task, token,
-    } = request.body;
+    const { token } = request.headers;
+    if (typeof token !== 'string') {
+      response.status(404).json({
+        message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
+      });
+
+      return;
+    }
+
+    const { task } = request.body;
+    if (!isReceivedTask(task)) {
+      response.status(403).json({
+        message: i18n.t('TASK.WRONG_TYPE'), hasError: true,
+      });
+
+      return;
+    }
 
     await patchTask(
       token,
@@ -128,7 +179,15 @@ export const deleteTask = async (request: Request, response: Response): Promise<
   const strTaskId = request.params.id;
   if (typeof strTaskId === 'string') {
     const taskId: number = parseInt(strTaskId);
-    const { token } = request.body;
+
+    const { token } = request.headers;
+    if (typeof token !== 'string') {
+      response.status(404).json({
+        message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
+      });
+
+      return;
+    }
 
     await removeTask(
       token,

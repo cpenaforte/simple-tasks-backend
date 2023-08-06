@@ -11,15 +11,26 @@ import {
   patchUserPlan,
   deactivateUserPlan,
 } from '../services/planService';
+import { isUserPlan } from '../utils/typeCheck';
+import {
+  Plan, UserPlan,
+} from '../models/plan';
 
 
 export const getPlans = async (request: Request, response: Response): Promise<void> => {
-  const { token } = request.body;
+  const { token } = request.headers;
+  if (typeof token !== 'string') {
+    response.status(404).json({
+      message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
+    });
+
+    return;
+  }
 
   await fetchPlans(
     token,
-    (users: object) => response.status(200).json({
-      users, hasError: false,
+    (plans: Plan[]) => response.status(200).json({
+      plans, hasError: false,
     }),
     (message: string | object | DefaultTFuncReturn) => response.status(403).json({
       message, hasError: true,
@@ -28,14 +39,22 @@ export const getPlans = async (request: Request, response: Response): Promise<vo
 
 export const getPlanByTitle = async (request: Request, response: Response): Promise<void> => {
   const { title } = request.params;
-  const { token } = request.body;
+
+  const { token } = request.headers;
+  if (typeof token !== 'string') {
+    response.status(404).json({
+      message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
+    });
+
+    return;
+  }
 
   if (typeof title === 'string') {
     await fetchPlanByTitle(
       token,
       title,
-      (user: object) => response.status(200).json({
-        user, hasError: false,
+      (plan: Plan) => response.status(200).json({
+        plan, hasError: false,
       }),
       (message: string | object | DefaultTFuncReturn) => response.status(403).json({
         message, hasError: true,
@@ -51,17 +70,36 @@ export const getUserPlanByUserId = async (request: Request, response: Response):
   const strUserId = request.params.id;
   if (typeof strUserId === 'string') {
     const userId: number = parseInt(strUserId);
+    if (!userId) {
+      response.status(403).json({
+        message: i18n.t('USER.ID_NOT_FOUND'), hasError: true,
+      });
 
-    const {
-      token,
-    } = request.body;
+      return;
+    }
+
+    const { token } = request.headers;
+    if (typeof token !== 'string') {
+      response.status(404).json({
+        message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
+      });
+
+      return;
+    }
 
     await fetchUserPlanByUserId(
       token,
       userId,
-      (user: object) => response.status(200).json({
-        user, hasError: false,
-      }),
+      (userPlan?: UserPlan) => {
+        if (userPlan) {
+          return response.status(200).json({
+            userPlan, hasError: false,
+          });
+        }
+        return response.status(403).json({
+          message: i18n.t('USER_PLAN.NOT_FOUND'), hasError: true,
+        });
+      },
       (message: string | object | DefaultTFuncReturn) => response.status(403).json({
         message, hasError: true,
       }));
@@ -73,9 +111,23 @@ export const getUserPlanByUserId = async (request: Request, response: Response):
 };
 
 export const createUserPlan = async (request: Request, response: Response): Promise<void> => {
-  const {
-    token, plan,
-  } = request.body;
+  const { token } = request.headers;
+  if (typeof token !== 'string') {
+    response.status(404).json({
+      message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
+    });
+
+    return;
+  }
+
+  const { plan } = request.body;
+  if (!isUserPlan(plan)) {
+    response.status(403).json({
+      message: i18n.t('USER_PLAN.WRONG_TYPE'), hasError: true,
+    });
+
+    return;
+  }
 
   await insertUserPlan(
     token,
@@ -89,9 +141,23 @@ export const createUserPlan = async (request: Request, response: Response): Prom
 };
 
 export const updateUserPlan = async (request: Request, response: Response): Promise<void> => {
-  const {
-    plan, token,
-  } = request.body;
+  const { token } = request.headers;
+  if (typeof token !== 'string') {
+    response.status(404).json({
+      message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
+    });
+
+    return;
+  }
+
+  const { plan } = request.body;
+  if (!isUserPlan(plan)) {
+    response.status(403).json({
+      message: i18n.t('USER_PLAN.WRONG_TYPE'), hasError: true,
+    });
+
+    return;
+  }
 
   await patchUserPlan(
     token,
@@ -108,7 +174,14 @@ export const deactivateUserPlanByUserId = async (request: Request, response: Res
   const strUserId = request.params.id;
   if (typeof strUserId === 'string') {
     const userId: number = parseInt(strUserId);
-    const { token } = request.body;
+    const { token } = request.headers;
+    if (typeof token !== 'string') {
+      response.status(404).json({
+        message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
+      });
+
+      return;
+    }
 
     await deactivateUserPlan(
       token,

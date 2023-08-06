@@ -6,11 +6,14 @@ import pool from '../config/pg';
 import { PoolClient } from 'pg';
 import { Response } from 'express';
 import i18n, { DefaultTFuncReturn } from 'i18next';
+import {
+  ReceivedUser, User,
+} from '../models/user';
 
 
 export const fetchUsers = async (
   token: string,
-  onSuccess: (message: object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: User[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
@@ -45,7 +48,7 @@ export const fetchUsers = async (
 export const fetchUserById = async (
   token: string,
   id: number,
-  onSuccess: (message: object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: User) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
@@ -66,6 +69,12 @@ export const fetchUserById = async (
           return;
         }
 
+        if (results.rows.length === 0) {
+          onError(i18n.t('USER.NOT_FOUND'));
+          await client.query('ROLLBACK');
+          return;
+        }
+
         onSuccess(results.rows[0]);
         await client.query('COMMIT');
       });
@@ -79,7 +88,7 @@ export const fetchUserById = async (
 export const fetchUserByUsername = async (
   token: string,
   username: string,
-  onSuccess: (message: object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: User) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
@@ -101,6 +110,12 @@ export const fetchUserByUsername = async (
           return;
         }
 
+        if (results.rows.length === 0) {
+          onError(i18n.t('USER.NOT_FOUND'));
+          await client.query('ROLLBACK');
+          return;
+        }
+
         onSuccess(results.rows[0]);
         await client.query('COMMIT');
       });
@@ -113,7 +128,7 @@ export const fetchUserByUsername = async (
 
 export const fetchUserByEmail = async (
   email: string,
-  onSuccess: (message: object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: User) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
@@ -123,6 +138,12 @@ export const fetchUserByEmail = async (
     client.query('SELECT * FROM users WHERE email = $1', [email], async (error, results) => {
       if (error) {
         onError(error.message);
+        await client.query('ROLLBACK');
+        return;
+      }
+
+      if (results.rows.length === 0) {
+        onError(i18n.t('USER.NOT_FOUND'));
         await client.query('ROLLBACK');
         return;
       }
@@ -137,15 +158,7 @@ export const fetchUserByEmail = async (
 };
 
 export const insertUser = async (
-  user: {
-    username: string;
-    user_password: string;
-    full_name: string;
-    email: string;
-    sex: string;
-    birthday: string;
-    confirm_password: string;
-  },
+  user: ReceivedUser,
   onSuccess: (message: string | object | DefaultTFuncReturn) => void,
   onError: (message: string | object | DefaultTFuncReturn) => void,
 ): Promise<void> => {
@@ -210,15 +223,7 @@ export const insertUser = async (
 export const patchUser = async (
   token: string,
   id: number,
-  user: {
-    username: string;
-    user_password: string;
-    full_name: string;
-    email: string;
-    sex: string;
-    birthday: string;
-    confirm_password: string;
-  },
+  user: ReceivedUser,
   onSuccess: (message: string | object | DefaultTFuncReturn) => void,
   onError: (message: string | object | DefaultTFuncReturn) => void,
 ): Promise<void> => {

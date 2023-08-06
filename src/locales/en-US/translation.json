@@ -13,7 +13,7 @@
   "INFO": "Node.js, Express and Postgres API",
   "TOKEN": {
     "AUTH_FAILED": "Token auth failed",
-    "NOT_FOUND": "Token not found, verify environment variables"
+    "NOT_FOUND": "Token not found, verify requisition headers"
   },
   "SIGNUP": {
     "UNFILLED_FIELDS": "Fill the required fields",
@@ -24,6 +24,8 @@
   "USER": {
     "INVALID_ID": "Invalid user ID",
     "ID_NOT_FOUND": "User ID not found",
+    "WRONG_TYPE": "User passed hasn't the correct type",
+    "NOT_FOUND": "User not found",
     "UPDATED_SUCCESSFULLY": "Updated user successfully"
   },
   "MIGRATION": {
@@ -40,14 +42,20 @@
   },
   "PLAN": {
     "INVALID_TITLE": "Invalid plan title",
+    "NOT_FOUND": "Plan not found",
     "ALREADY_HAVE_PLAN": "User aready have an active plan",
     "NO_ACTIVE_PLAN": "User don't have an active plan to update",
     "DEACTIVATED": "Deactivated plan succesfully",
     "UPDATED": "Updated plan succesfully",
     "REGISTERED": "Registered plan succesfully"
   },
+  "USER_PLAN": {
+    "WRONG_TYPE": "User plan passed hasn't the correct type",
+    "NOT_FOUND": "User plan not found"
+  },
   "TASK": {
     "INVALID_ID": "Invalid task ID",
+    "WRONG_TYPE": "Task passed hasn't the correct type",
     "REGISTERED": "Registered task successfully",
     "NOT_FOUND": "Task not found",
     "UPDATED": "Task updated successfully",

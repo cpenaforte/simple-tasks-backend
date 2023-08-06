@@ -12,14 +12,25 @@ import {
   patchUser,
   removeUserById,
 } from '../services/userService';
+import {
+  User,
+} from '../models/user';
+import { isReceivedUser } from '../utils/typeCheck';
 
 
 export const getUsers = async (request: Request, response: Response): Promise<void> => {
-  const { token } = request.body;
+  const { token } = request.headers;
+  if (typeof token !== 'string') {
+    response.status(404).json({
+      message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
+    });
+
+    return;
+  }
 
   await fetchUsers(
     token,
-    (users: object) => response.status(200).json({
+    (users: User[]) => response.status(200).json({
       users, hasError: false,
     }),
     (message: string | object | DefaultTFuncReturn) => response.status(403).json({
@@ -31,12 +42,19 @@ export const getUserById = async (request: Request, response: Response): Promise
   const strUserId = request.params.id;
   if (typeof strUserId === 'string') {
     const id: number = parseInt(strUserId);
-    const { token } = request.body;
+    const { token } = request.headers;
+    if (typeof token !== 'string') {
+      response.status(404).json({
+        message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
+      });
+
+      return;
+    }
 
     await fetchUserById(
       token,
       id,
-      (user: object) => response.status(200).json({
+      (user: User) => response.status(200).json({
         user, hasError: false,
       }),
       (message: string | object | DefaultTFuncReturn) => response.status(403).json({
@@ -50,14 +68,20 @@ export const getUserById = async (request: Request, response: Response): Promise
 };
 
 export const getUserByUsername = async (request: Request, response: Response): Promise<void> => {
-  const {
-    token, username,
-  } = request.body;
+  const { username } = request.body;
+  const { token } = request.headers;
+  if (typeof token !== 'string') {
+    response.status(404).json({
+      message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
+    });
+
+    return;
+  }
 
   await fetchUserByUsername(
     token,
     username,
-    (user: object) => response.status(200).json({
+    (user: User) => response.status(200).json({
       user, hasError: false,
     }),
     (message: string | object | DefaultTFuncReturn) => response.status(403).json({
@@ -72,7 +96,7 @@ export const getUserByEmail = async (request: Request, response: Response): Prom
 
   await fetchUserByEmail(
     email,
-    (user: object) => response.status(200).json({
+    (user: User) => response.status(200).json({
       user, hasError: false,
     }),
     (message: string | object | DefaultTFuncReturn) => response.status(403).json({
@@ -84,6 +108,14 @@ export const createUser = async (request: Request, response: Response): Promise<
   const {
     user,
   } = request.body;
+
+  if (!isReceivedUser(user)) {
+    response.status(403).json({
+      message: i18n.t('USER.WRONG_TYPE'), hasError: true,
+    });
+
+    return;
+  }
 
   await insertUser(
     user,
@@ -99,9 +131,24 @@ export const updateUser = async (request: Request, response: Response): Promise<
   const strUserId = request.params.id;
   if (typeof strUserId === 'string') {
     const id: number = parseInt(strUserId);
-    const {
-      user, token,
-    } = request.body;
+
+    const { token } = request.headers;
+    if (typeof token !== 'string') {
+      response.status(404).json({
+        message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
+      });
+
+      return;
+    }
+
+    const { user } = request.body;
+    if (!isReceivedUser(user)) {
+      response.status(403).json({
+        message: i18n.t('USER.WRONG_TYPE'), hasError: true,
+      });
+
+      return;
+    }
 
     await patchUser(
       token,
@@ -124,7 +171,14 @@ export const deleteUserById = async (request: Request, response: Response): Prom
   const strUserId = request.params.id;
   if (typeof strUserId === 'string') {
     const id: number = parseInt(strUserId);
-    const { token } = request.body;
+    const { token } = request.headers;
+    if (typeof token !== 'string') {
+      response.status(404).json({
+        message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
+      });
+
+      return;
+    }
 
     await removeUserById(
       token,
