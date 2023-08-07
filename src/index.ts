@@ -46,8 +46,8 @@ if (cluster.isPrimary) {
     }
 
     cluster.on('exit', (worker) => {
-      console.log(`worker ${worker.process.pid} died`);
-      console.log('Let\'s fork another worker!');
+      console.log(`Worker ${worker.process.pid} died`);
+      console.log('Forking another worker');
       cluster.fork();
     });
   });
