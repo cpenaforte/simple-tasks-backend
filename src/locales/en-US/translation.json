@@ -5,7 +5,8 @@
   "SYSTEM": {
     "INTERNAL_ERROR": "Internal server error",
     "EXECUTING_METHOD": "{{time}}: Executing method {{method}} on {{- url}}",
-    "RUNNING_PORT": "App running on port {{port}}"
+    "RUNNING_PORT": "App running on port {{port}}",
+    "WORKER_RUNNING": "Worker {{pid, number}} running on port {{port, number}}"
   },
   "WARNING": {
     "TOO_MANY_REQUESTS": "Too many requests in a small period, try again later"

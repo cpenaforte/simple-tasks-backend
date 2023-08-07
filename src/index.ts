@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
-const port = process.env.PORT;
+const port = +(process.env.PORT || 3000);
 
 import express, { Application } from 'express';
 import bodyParser from 'body-parser';
@@ -22,6 +22,9 @@ import winstonLogger from './config/winston';
 
 import migrate from './migrations';
 
+import cluster from 'cluster';
+import os from 'os';
+
 i18next.use(Backend).use(middleware.LanguageDetector).init({
   backend: {
     loadPath: 'src/locales/{{lng}}/{{ns}}.json',
@@ -30,13 +33,31 @@ i18next.use(Backend).use(middleware.LanguageDetector).init({
   fallbackLng: 'en-US',
   supportedLngs: [ 'en-US', 'pt-BR' ],
 });
-const app: Application = express();
 
-app.use(
-  middleware.handle(i18next),
-);
+if (cluster.isPrimary) {
+  migrate().then(() => {
+    const totalCPUs = os.cpus().length;
 
-migrate().then(() => {
+    console.log(`Number of threads is ${totalCPUs}`);
+
+    // Fork workers.
+    for (let i = 0; i < totalCPUs; i++) {
+      cluster.fork();
+    }
+
+    cluster.on('exit', (worker) => {
+      console.log(`worker ${worker.process.pid} died`);
+      console.log('Let\'s fork another worker!');
+      cluster.fork();
+    });
+  });
+} else {
+  const app: Application = express();
+
+  app.use(
+    middleware.handle(i18next),
+  );
+
   app.use(bodyParser.json());
   app.use(
     bodyParser.urlencoded({
@@ -48,8 +69,10 @@ migrate().then(() => {
   app.use(rateLimiter);
   app.use(winstonLogger);
 
+  const { pid } = process;
+
   app.listen(port, () => {
-    console.log(i18next.t('SYSTEM.RUNNING_PORT', { port }));
+    console.log(`Worker ${pid} on port ${port}`);
   });
 
   app.get('/', (request, response) => {
@@ -65,4 +88,4 @@ migrate().then(() => {
   app.use('/api/v1/tasks', taskRoutes);
 
   app.use('/api/v1/projects', projectRoutes);
-});
+}
