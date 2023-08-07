@@ -1,7 +1,7 @@
 import {
   Request, Response,
 } from 'express';
-import i18n, { DefaultTFuncReturn } from 'i18next';
+import i18n from 'i18next';
 /* eslint-disable no-unused-vars */
 import {
   fetchUserProjects,
@@ -34,7 +34,7 @@ export const getProjects = async (request: Request, response: Response): Promise
       (tasks: Project[]) => response.status(200).json({
         tasks, hasError: false,
       }),
-      (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+      (message: string | object) => response.status(403).json({
         message, hasError: true,
       }));
   } else {
@@ -64,7 +64,7 @@ export const getSingleProject = async (request: Request, response: Response): Pr
       (task: Project) => response.status(200).json({
         task, hasError: false,
       }),
-      (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+      (message: string | object) => response.status(403).json({
         message, hasError: true,
       }));
   } else {
@@ -96,10 +96,10 @@ export const createProject = async (request: Request, response: Response): Promi
   await insertProject(
     token,
     task,
-    (answer: string | object | DefaultTFuncReturn) => response.status(201).json({
+    (answer: string | object) => response.status(201).json({
       message: answer, hasError: false,
     }),
-    (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+    (message: string | object) => response.status(403).json({
       message, hasError: true,
     }));
 };
@@ -131,10 +131,10 @@ export const updateProject = async (request: Request, response: Response): Promi
       token,
       taskId,
       task,
-      (answer: string | object | DefaultTFuncReturn) => response.status(200).json({
+      (answer: string | object) => response.status(200).json({
         message: answer, hasError: false,
       }),
-      (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+      (message: string | object) => response.status(403).json({
         message, hasError: true,
       }));
   } else {
@@ -161,10 +161,10 @@ export const deleteProject = async (request: Request, response: Response): Promi
     await removeProject(
       token,
       taskId,
-      (answer: string | object | DefaultTFuncReturn) => response.status(202).json({
+      (answer: string | object) => response.status(202).json({
         message: answer, hasError: false,
       }),
-      (message: object | DefaultTFuncReturn) => response.status(403).json({
+      (message: string | object) => response.status(403).json({
         message, hasError: true,
       }));
   } else {

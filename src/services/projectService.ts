@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import pool from '../config/pg';
 import { PoolClient } from 'pg';
 import { Response } from 'express';
-import i18n, { DefaultTFuncReturn } from 'i18next';
+import i18n from 'i18next';
 import {
   Project,
 } from '../models/project';
@@ -13,7 +13,7 @@ export const fetchUserProjects = async (
   token: string,
   userId: number,
   onSuccess: (message: Project[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -51,7 +51,7 @@ export const fetchSingleProject = async (
   token: string,
   projectId: number,
   onSuccess: (message: Project) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -88,8 +88,8 @@ export const fetchSingleProject = async (
 export const insertProject = async (
   token: string,
   project: Project,
-  onSuccess: (message: DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -130,8 +130,8 @@ export const patchProject = async (
   token: string,
   projectId: number,
   project: Project,
-  onSuccess: (message: DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -168,7 +168,7 @@ export const patchProject = async (
           onSuccess(i18n.t('PROJECT.UPDATED'));
           await client.query('COMMIT');
         });
-      }, (message: string | object | DefaultTFuncReturn) => onError(message));
+      }, (message: string | object) => onError(message));
     });
     client.release();
   } else {
@@ -179,8 +179,8 @@ export const patchProject = async (
 export const removeProject = async (
   token: string,
   projectId: number,
-  onSuccess: (message: DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -217,7 +217,7 @@ export const removeProject = async (
 
         onSuccess(i18n.t('PROJECT.DELETED'));
         await client.query('COMMIT');
-      }, (message: string | object | DefaultTFuncReturn) => onError(message));
+      }, (message: string | object) => onError(message));
     });
 
     client.release();

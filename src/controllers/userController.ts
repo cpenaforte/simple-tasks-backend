@@ -1,7 +1,7 @@
 import {
   Request, Response,
 } from 'express';
-import i18n, { DefaultTFuncReturn } from 'i18next';
+import i18n from 'i18next';
 /* eslint-disable no-unused-vars */
 import {
   fetchUsers,
@@ -33,7 +33,7 @@ export const getUsers = async (request: Request, response: Response): Promise<vo
     (users: User[]) => response.status(200).json({
       users, hasError: false,
     }),
-    (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+    (message: string | object) => response.status(403).json({
       message, hasError: true,
     }));
 };
@@ -54,10 +54,17 @@ export const getUserById = async (request: Request, response: Response): Promise
     await fetchUserById(
       token,
       id,
-      (user: User) => response.status(200).json({
-        user, hasError: false,
-      }),
-      (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+      (user: User | undefined) => {
+        if (user) {
+          return response.status(200).json({
+            user, hasError: false,
+          });
+        }
+        return response.status(403).json({
+          message: i18n.t('USER.ID_NOT_FOUND'), hasError: true,
+        });
+      },
+      (message: string | object) => response.status(403).json({
         message, hasError: true,
       }));
   } else {
@@ -81,10 +88,17 @@ export const getUserByUsername = async (request: Request, response: Response): P
   await fetchUserByUsername(
     token,
     username,
-    (user: User) => response.status(200).json({
-      user, hasError: false,
-    }),
-    (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+    (user: User | undefined) => {
+      if (user) {
+        return response.status(200).json({
+          user, hasError: false,
+        });
+      }
+      return response.status(403).json({
+        message: i18n.t('USER.NOT_FOUND'), hasError: true,
+      });
+    },
+    (message: string | object) => response.status(403).json({
       message, hasError: true,
     }));
 };
@@ -96,10 +110,17 @@ export const getUserByEmail = async (request: Request, response: Response): Prom
 
   await fetchUserByEmail(
     email,
-    (user: User) => response.status(200).json({
-      user, hasError: false,
-    }),
-    (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+    (user: User | undefined) => {
+      if (user) {
+        return response.status(200).json({
+          user, hasError: false,
+        });
+      }
+      return response.status(403).json({
+        message: i18n.t('USER.NOT_FOUND'), hasError: true,
+      });
+    },
+    (message: string | object) => response.status(403).json({
       message, hasError: true,
     }));
 };
@@ -119,10 +140,10 @@ export const createUser = async (request: Request, response: Response): Promise<
 
   await insertUser(
     user,
-    (answer: string | object | DefaultTFuncReturn) => response.status(201).json({
+    (answer: string | object) => response.status(201).json({
       answer, hasError: false,
     }),
-    (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+    (message: string | object) => response.status(403).json({
       message, hasError: true,
     }));
 };
@@ -154,10 +175,10 @@ export const updateUser = async (request: Request, response: Response): Promise<
       token,
       id,
       user,
-      (answer: string | object | DefaultTFuncReturn) => response.status(204).json({
+      (answer: string | object) => response.status(204).json({
         answer, hasError: false,
       }),
-      (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+      (message: string | object) => response.status(403).json({
         message, hasError: true,
       }));
   } else {
@@ -186,7 +207,7 @@ export const deleteUserById = async (request: Request, response: Response): Prom
       (answer: string | object) => response.status(202).json({
         answer, hasError: false,
       }),
-      (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+      (message: string | object) => response.status(403).json({
         message, hasError: true,
       }));
   } else {

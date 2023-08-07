@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import pool from '../config/pg';
 import { PoolClient } from 'pg';
 import { Response } from 'express';
-import i18n, { DefaultTFuncReturn } from 'i18next';
+import i18n from 'i18next';
 import {
   ReceivedTask, Task,
 } from '../models/task';
@@ -13,7 +13,7 @@ export const fetchUserTasks = async (
   token: string,
   userId: number,
   onSuccess: (message: Task[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -51,7 +51,7 @@ export const fetchSharedTasks = async (
   token: string,
   userId: number,
   onSuccess: (message: Task[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -88,7 +88,7 @@ export const fetchSingleTask = async (
   token: string,
   taskId: number,
   onSuccess: (message: Task) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -125,8 +125,8 @@ export const fetchSingleTask = async (
 export const insertTask = async (
   token: string,
   task: ReceivedTask,
-  onSuccess: (message: DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -167,8 +167,8 @@ export const patchTask = async (
   token: string,
   taskId: number,
   task: ReceivedTask,
-  onSuccess: (message: DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -205,7 +205,7 @@ export const patchTask = async (
           onSuccess(i18n.t('TASK.UPDATED'));
           await client.query('COMMIT');
         });
-      }, (message: string | object | DefaultTFuncReturn) => onError(message));
+      }, (message: string | object) => onError(message));
     });
     client.release();
   } else {
@@ -216,8 +216,8 @@ export const patchTask = async (
 export const removeTask = async (
   token: string,
   taskId: number,
-  onSuccess: (message: DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -254,7 +254,7 @@ export const removeTask = async (
 
         onSuccess(i18n.t('TASK.DELETED'));
         await client.query('COMMIT');
-      }, (message: string | object | DefaultTFuncReturn) => onError(message));
+      }, (message: string | object) => onError(message));
     });
 
     client.release();

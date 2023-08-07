@@ -1,7 +1,7 @@
 import {
   Request, Response,
 } from 'express';
-import i18n, { DefaultTFuncReturn } from 'i18next';
+import i18n from 'i18next';
 /* eslint-disable no-unused-vars */
 import {
   fetchPlans,
@@ -32,7 +32,7 @@ export const getPlans = async (request: Request, response: Response): Promise<vo
     (plans: Plan[]) => response.status(200).json({
       plans, hasError: false,
     }),
-    (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+    (message: string | object) => response.status(403).json({
       message, hasError: true,
     }));
 };
@@ -56,7 +56,7 @@ export const getPlanByTitle = async (request: Request, response: Response): Prom
       (plan: Plan) => response.status(200).json({
         plan, hasError: false,
       }),
-      (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+      (message: string | object) => response.status(403).json({
         message, hasError: true,
       }));
   } else {
@@ -100,7 +100,7 @@ export const getUserPlanByUserId = async (request: Request, response: Response):
           message: i18n.t('USER_PLAN.NOT_FOUND'), hasError: true,
         });
       },
-      (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+      (message: string | object) => response.status(403).json({
         message, hasError: true,
       }));
   } else {
@@ -132,10 +132,10 @@ export const createUserPlan = async (request: Request, response: Response): Prom
   await insertUserPlan(
     token,
     plan,
-    (answer: string | object | DefaultTFuncReturn) => response.status(201).json({
+    (answer: string | object) => response.status(201).json({
       message: answer, hasError: false,
     }),
-    (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+    (message: string | object) => response.status(403).json({
       message, hasError: true,
     }));
 };
@@ -162,10 +162,10 @@ export const updateUserPlan = async (request: Request, response: Response): Prom
   await patchUserPlan(
     token,
     plan,
-    (answer: string | object | DefaultTFuncReturn) => response.status(200).json({
+    (answer: string | object) => response.status(200).json({
       message: answer, hasError: false,
     }),
-    (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+    (message: string | object) => response.status(403).json({
       message, hasError: true,
     }));
 };
@@ -186,10 +186,10 @@ export const deactivateUserPlanByUserId = async (request: Request, response: Res
     await deactivateUserPlan(
       token,
       userId,
-      (answer: string | object | DefaultTFuncReturn) => response.status(202).json({
+      (answer: string | object) => response.status(202).json({
         message: answer, hasError: false,
       }),
-      (message: object | DefaultTFuncReturn) => response.status(403).json({
+      (message: string | object) => response.status(403).json({
         message, hasError: true,
       }));
   } else {

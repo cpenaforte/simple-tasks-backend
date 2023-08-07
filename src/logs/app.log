@@ -112,3 +112,11 @@ Error: relation "migrations" does not exist
     at Object.next (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:122:57)
     at fulfilled (/home/carlos/workspace/simple-tasks-backend/node_modules/tslib/tslib.js:112:62)
     at processTicksAndRejections (node:internal/process/task_queues:95:5)
+07/08/2023 13:22:06: error: uncaughtException: getaddrinfo ENOTFOUND postgres
+Error: getaddrinfo ENOTFOUND postgres
+    at /home/carlos/workspace/simple-tasks-backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+07/08/2023 13:22:06: error: uncaughtException: getaddrinfo ENOTFOUND postgres
+Error: getaddrinfo ENOTFOUND postgres
+    at /home/carlos/workspace/simple-tasks-backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)

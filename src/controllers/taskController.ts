@@ -1,7 +1,7 @@
 import {
   Request, Response,
 } from 'express';
-import i18n, { DefaultTFuncReturn } from 'i18next';
+import i18n from 'i18next';
 /* eslint-disable no-unused-vars */
 import {
   fetchUserTasks,
@@ -35,7 +35,7 @@ export const getTasks = async (request: Request, response: Response): Promise<vo
       (tasks: Task[]) => response.status(200).json({
         tasks, hasError: false,
       }),
-      (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+      (message: string | object) => response.status(403).json({
         message, hasError: true,
       }));
   } else {
@@ -65,7 +65,7 @@ export const getSharedTasks = async (request: Request, response: Response): Prom
       (tasks: Task[]) => response.status(200).json({
         tasks, hasError: false,
       }),
-      (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+      (message: string | object) => response.status(403).json({
         message, hasError: true,
       }));
   } else {
@@ -95,7 +95,7 @@ export const getSingleTask = async (request: Request, response: Response): Promi
       (task: Task) => response.status(200).json({
         task, hasError: false,
       }),
-      (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+      (message: string | object) => response.status(403).json({
         message, hasError: true,
       }));
   } else {
@@ -127,10 +127,10 @@ export const createTask = async (request: Request, response: Response): Promise<
   await insertTask(
     token,
     task,
-    (answer: string | object | DefaultTFuncReturn) => response.status(201).json({
+    (answer: string | object) => response.status(201).json({
       message: answer, hasError: false,
     }),
-    (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+    (message: string | object) => response.status(403).json({
       message, hasError: true,
     }));
 };
@@ -162,10 +162,10 @@ export const updateTask = async (request: Request, response: Response): Promise<
       token,
       taskId,
       task,
-      (answer: string | object | DefaultTFuncReturn) => response.status(200).json({
+      (answer: string | object) => response.status(200).json({
         message: answer, hasError: false,
       }),
-      (message: string | object | DefaultTFuncReturn) => response.status(403).json({
+      (message: string | object) => response.status(403).json({
         message, hasError: true,
       }));
   } else {
@@ -192,10 +192,10 @@ export const deleteTask = async (request: Request, response: Response): Promise<
     await removeTask(
       token,
       taskId,
-      (answer: string | object | DefaultTFuncReturn) => response.status(202).json({
+      (answer: string | object) => response.status(202).json({
         message: answer, hasError: false,
       }),
-      (message: object | DefaultTFuncReturn) => response.status(403).json({
+      (message: string | object) => response.status(403).json({
         message, hasError: true,
       }));
   } else {

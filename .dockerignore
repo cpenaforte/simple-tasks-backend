@@ -1,0 +1,8 @@
+.env.example
+
+node_modules/*
+.vscode/
+
+docker*
+
+.gitignore

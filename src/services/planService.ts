@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import pool from '../config/pg';
 import { PoolClient } from 'pg';
 import { Response } from 'express';
-import i18n, { DefaultTFuncReturn } from 'i18next';
+import i18n from 'i18next';
 import {
   Plan, UserPlan,
 } from '../models/plan';
@@ -13,7 +13,7 @@ import {
 export const fetchPlans = async (
   token: string,
   onSuccess: (message: Plan[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -50,7 +50,7 @@ export const fetchPlanByTitle = async (
   token: string,
   planTitle: string,
   onSuccess: (message: Plan) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -93,7 +93,7 @@ export const fetchUserPlanByUserId = async (
   token: string,
   user_id: number,
   onSuccess: (message?: UserPlan) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -129,8 +129,8 @@ export const fetchUserPlanByUserId = async (
 export const insertUserPlan = async (
   token: string,
   plan: UserPlan,
-  onSuccess: (message: DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -167,7 +167,7 @@ export const insertUserPlan = async (
           onSuccess(i18n.t('PLAN.REGISTERED'));
           await client.query('COMMIT');
         });
-      }, (message: string | object | DefaultTFuncReturn) => onError(message));
+      }, (message: string | object) => onError(message));
     });
     client.release();
   } else {
@@ -178,8 +178,8 @@ export const insertUserPlan = async (
 export const patchUserPlan = async (
   token: string,
   plan: UserPlan,
-  onSuccess: (message: DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -216,7 +216,7 @@ export const patchUserPlan = async (
           onSuccess(i18n.t('PLAN.UPDATED'));
           await client.query('COMMIT');
         });
-      }, (message: string | object | DefaultTFuncReturn) => onError(message));
+      }, (message: string | object) => onError(message));
     });
     client.release();
   } else {
@@ -227,8 +227,8 @@ export const patchUserPlan = async (
 export const deactivateUserPlan = async (
   token: string,
   user_id: number,
-  onSuccess: (message: DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -259,7 +259,7 @@ export const deactivateUserPlan = async (
           onSuccess(i18n.t('PLAN.DEACTIVATED'));
           await client.query('COMMIT');
         });
-      }, (message: string | object | DefaultTFuncReturn) => onError(message));
+      }, (message: string | object) => onError(message));
     });
     client.release();
   } else {

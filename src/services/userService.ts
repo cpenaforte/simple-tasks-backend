@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import pool from '../config/pg';
 import { PoolClient } from 'pg';
 import { Response } from 'express';
-import i18n, { DefaultTFuncReturn } from 'i18next';
+import i18n from 'i18next';
 import {
   ReceivedUser, User,
 } from '../models/user';
@@ -14,7 +14,7 @@ import {
 export const fetchUsers = async (
   token: string,
   onSuccess: (message: User[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -49,7 +49,7 @@ export const fetchUserById = async (
   token: string,
   id: number,
   onSuccess: (message: User) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -69,12 +69,6 @@ export const fetchUserById = async (
           return;
         }
 
-        if (results.rows.length === 0) {
-          onError(i18n.t('USER.NOT_FOUND'));
-          await client.query('ROLLBACK');
-          return;
-        }
-
         onSuccess(results.rows[0]);
         await client.query('COMMIT');
       });
@@ -89,7 +83,7 @@ export const fetchUserByUsername = async (
   token: string,
   username: string,
   onSuccess: (message: User) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -110,12 +104,6 @@ export const fetchUserByUsername = async (
           return;
         }
 
-        if (results.rows.length === 0) {
-          onError(i18n.t('USER.NOT_FOUND'));
-          await client.query('ROLLBACK');
-          return;
-        }
-
         onSuccess(results.rows[0]);
         await client.query('COMMIT');
       });
@@ -129,7 +117,7 @@ export const fetchUserByUsername = async (
 export const fetchUserByEmail = async (
   email: string,
   onSuccess: (message: User) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object | DefaultTFuncReturn) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -138,12 +126,6 @@ export const fetchUserByEmail = async (
     client.query('SELECT * FROM users WHERE email = $1', [email], async (error, results) => {
       if (error) {
         onError(error.message);
-        await client.query('ROLLBACK');
-        return;
-      }
-
-      if (results.rows.length === 0) {
-        onError(i18n.t('USER.NOT_FOUND'));
         await client.query('ROLLBACK');
         return;
       }
@@ -159,8 +141,8 @@ export const fetchUserByEmail = async (
 
 export const insertUser = async (
   user: ReceivedUser,
-  onSuccess: (message: string | object | DefaultTFuncReturn) => void,
-  onError: (message: string | object | DefaultTFuncReturn) => void,
+  onSuccess: (message: string | object) => void,
+  onError: (message: string | object) => void,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
@@ -224,8 +206,8 @@ export const patchUser = async (
   token: string,
   id: number,
   user: ReceivedUser,
-  onSuccess: (message: string | object | DefaultTFuncReturn) => void,
-  onError: (message: string | object | DefaultTFuncReturn) => void,
+  onSuccess: (message: string | object) => void,
+  onError: (message: string | object) => void,
 ): Promise<void> => {
   const client: PoolClient = await pool.connect();
   await client.query('BEGIN');
@@ -299,7 +281,7 @@ export const removeUserById = async (
   token: string,
   id: number,
   onSuccess: (message: string) => void,
-  onError: (message: string | object | DefaultTFuncReturn) => void,
+  onError: (message: string | object) => void,
 ): Promise<void> => {
   const client: PoolClient = await pool.connect();
   await client.query('BEGIN');
