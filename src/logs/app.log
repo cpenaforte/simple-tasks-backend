@@ -120,3 +120,19 @@ Error: getaddrinfo ENOTFOUND postgres
 Error: getaddrinfo ENOTFOUND postgres
     at /home/carlos/workspace/simple-tasks-backend/node_modules/pg-pool/index.js:45:11
     at processTicksAndRejections (node:internal/process/task_queues:95:5)
+09/08/2023 20:02:42: error: uncaughtException: connect ECONNREFUSED 127.0.0.1:5432
+Error: connect ECONNREFUSED 127.0.0.1:5432
+    at /app/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+09/08/2023 20:02:42: error: uncaughtException: connect ECONNREFUSED 127.0.0.1:5432
+Error: connect ECONNREFUSED 127.0.0.1:5432
+    at /app/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+09/08/2023 20:03:50: error: uncaughtException: connect ECONNREFUSED 127.0.0.1:5432
+Error: connect ECONNREFUSED 127.0.0.1:5432
+    at /app/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+09/08/2023 20:03:50: error: uncaughtException: connect ECONNREFUSED 127.0.0.1:5432
+Error: connect ECONNREFUSED 127.0.0.1:5432
+    at /app/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
