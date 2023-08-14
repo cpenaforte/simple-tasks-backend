@@ -136,3 +136,23 @@ Error: connect ECONNREFUSED 127.0.0.1:5432
 Error: connect ECONNREFUSED 127.0.0.1:5432
     at /app/node_modules/pg-pool/index.js:45:11
     at processTicksAndRejections (node:internal/process/task_queues:95:5)
+14/08/2023 12:10:01: error: uncaughtException: getaddrinfo EAI_AGAIN backend
+Error: getaddrinfo EAI_AGAIN backend
+    at /app/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+14/08/2023 12:11:14: error: uncaughtException: no PostgreSQL user name specified in startup packet
+error: no PostgreSQL user name specified in startup packet
+    at /app/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+14/08/2023 12:11:14: error: uncaughtException: no PostgreSQL user name specified in startup packet
+error: no PostgreSQL user name specified in startup packet
+    at /app/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+14/08/2023 12:12:51: error: uncaughtException: no PostgreSQL user name specified in startup packet
+error: no PostgreSQL user name specified in startup packet
+    at /app/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+14/08/2023 12:12:51: error: uncaughtException: no PostgreSQL user name specified in startup packet
+error: no PostgreSQL user name specified in startup packet
+    at /app/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
