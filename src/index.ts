@@ -9,7 +9,7 @@ import corsMiddleware from './config/cors';
 import rateLimiter from './config/rateLimiter';
 
 import userRoutes from './routes/userRoutes';
-import loginRoutes from './routes/loginRoutes';
+import authRoutes from './routes/authRoutes';
 import planRoutes from './routes/planRoutes';
 import taskRoutes from './routes/taskRoutes';
 import projectRoutes from './routes/projectRoutes';
@@ -81,7 +81,7 @@ if (cluster.isPrimary) {
 
   app.use('/api/v1/users', userRoutes);
 
-  app.use('/login', loginRoutes);
+  app.use('/auth', authRoutes);
 
   app.use('/api/v1/plans', planRoutes);
 

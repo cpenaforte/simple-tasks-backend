@@ -53,3 +53,26 @@ export const authenticateUser = async (
 
   client.release();
 };
+
+export const checkToken = async (
+  user_id : number,
+  token : string,
+  onSuccess: (message: string) => void,
+  onError: (message: string | object) => void,
+): Promise<void> => {
+  const secret = process.env.TOKEN_KEY;
+
+  if (secret) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    jwt.verify(token, secret, async (e, decoded) => {
+      const hasCorrectId = typeof decoded !== 'string' && decoded?.id && decoded?.id == user_id;
+      if (e || !hasCorrectId) {
+        onError({
+          auth: false, message: i18n.t('TOKEN.LOGOUT_FAILED'),
+        });
+        return;
+      }
+      onSuccess (i18n.t('TOKEN.LOGOUT_SUCCESS'));
+    });
+  }
+};

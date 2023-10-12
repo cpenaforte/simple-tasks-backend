@@ -156,3 +156,51 @@ error: no PostgreSQL user name specified in startup packet
 error: no PostgreSQL user name specified in startup packet
     at /app/node_modules/pg-pool/index.js:45:11
     at processTicksAndRejections (node:internal/process/task_queues:95:5)
+23/08/2023 22:45:57: error: uncaughtException: terminating connection due to administrator command
+error: terminating connection due to administrator command
+    at Parser.parseErrorMessage (/app/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/app/node_modules/pg-protocol/src/parser.ts:188:21)
+    at Parser.parse (/app/node_modules/pg-protocol/src/parser.ts:103:30)
+    at Socket.<anonymous> (/app/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:514:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:343:12)
+    at readableAddChunk (node:internal/streams/readable:316:9)
+    at Socket.Readable.push (node:internal/streams/readable:253:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+23/08/2023 22:45:57: error: uncaughtException: terminating connection due to administrator command
+error: terminating connection due to administrator command
+    at Parser.parseErrorMessage (/app/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/app/node_modules/pg-protocol/src/parser.ts:188:21)
+    at Parser.parse (/app/node_modules/pg-protocol/src/parser.ts:103:30)
+    at Socket.<anonymous> (/app/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:514:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:343:12)
+    at readableAddChunk (node:internal/streams/readable:316:9)
+    at Socket.Readable.push (node:internal/streams/readable:253:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+23/08/2023 22:45:57: error: uncaughtException: terminating connection due to administrator command
+error: terminating connection due to administrator command
+    at Parser.parseErrorMessage (/app/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/app/node_modules/pg-protocol/src/parser.ts:188:21)
+    at Parser.parse (/app/node_modules/pg-protocol/src/parser.ts:103:30)
+    at Socket.<anonymous> (/app/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:514:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:343:12)
+    at readableAddChunk (node:internal/streams/readable:316:9)
+    at Socket.Readable.push (node:internal/streams/readable:253:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+23/08/2023 22:45:57: error: uncaughtException: terminating connection due to administrator command
+error: terminating connection due to administrator command
+    at Parser.parseErrorMessage (/app/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/app/node_modules/pg-protocol/src/parser.ts:188:21)
+    at Parser.parse (/app/node_modules/pg-protocol/src/parser.ts:103:30)
+    at Socket.<anonymous> (/app/node_modules/pg-protocol/src/index.ts:7:48)
+    at Socket.emit (node:events:514:28)
+    at Socket.emit (node:domain:489:12)
+    at addChunk (node:internal/streams/readable:343:12)
+    at readableAddChunk (node:internal/streams/readable:316:9)
+    at Socket.Readable.push (node:internal/streams/readable:253:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
