@@ -35,7 +35,6 @@ export const logout = async (request: Request, response: Response): Promise<void
   }
 
   await checkToken(user_id, token, (message: string): void => {
-    response.setHeader('Clear-Site-Data', '"cookies", "storage"');
     response.status(200).json({
       message, error: false,
     });
