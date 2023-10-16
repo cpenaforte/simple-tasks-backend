@@ -7,7 +7,7 @@ import { PoolClient } from 'pg';
 import { Response } from 'express';
 import i18n from 'i18next';
 import {
-  ReceivedUser, User,
+  CreateReceivedUser, UpdateReceivedUser, User,
 } from '../models/user';
 
 
@@ -140,7 +140,7 @@ export const fetchUserByEmail = async (
 };
 
 export const insertUser = async (
-  user: ReceivedUser,
+  user: CreateReceivedUser,
   onSuccess: (message: string | object) => void,
   onError: (message: string | object) => void,
 ): Promise<void> => {
@@ -205,8 +205,8 @@ export const insertUser = async (
 export const patchUser = async (
   token: string,
   id: number,
-  user: ReceivedUser,
-  onSuccess: (message: string | object) => void,
+  user: UpdateReceivedUser,
+  onSuccess: (user: object) => void,
   onError: (message: string | object) => void,
 ): Promise<void> => {
   const client: PoolClient = await pool.connect();
@@ -222,54 +222,45 @@ export const patchUser = async (
       }
 
       const {
-        username, user_password, full_name, email, sex, birthday, confirm_password,
+        username, full_name, email, sex, birthday,
       } = user;
 
-      if (!username || !email || !user_password || !confirm_password) {
+      if (!username || !email || !sex || !birthday) {
         onError(i18n.t('SIGNUP.UNFILLED_FIELDS'));
         await client.query('ROLLBACK');
         return;
       }
-      //Confirm Passwords
-      if (user_password !== confirm_password) {
-        onError(i18n.t('SIGNUP.UNMATCHED_PASSWORDS'));
-        await client.query('ROLLBACK');
-        return;
-      } else {
-        //Validation
-        fetchUserById(token, id, async (results: string | object) => {
-          const user = results;
+      //Validation
+      fetchUserById(token, id, async (results: string | object) => {
+        const user = results;
 
-          if (!user) {
-            console.log(user);
-            onError(i18n.t('USER.ID_NOT_FOUND'));
-            await client.query('ROLLBACK');
-            return;
-          }
-
-          //Password Hashing
-          const salt: string = bcrypt.genSaltSync(parseInt(process.env.SALT_ROUNDS || '8'));
-
-          const new_password: string = bcrypt.hashSync(user_password, salt);
-
-          client.query(
-            'UPDATE users SET (username,user_password,full_name,email,sex,birthday) = ($1,$2,$3,$4,$5,$6) WHERE user_id = $7',
-            [
-              username, new_password, full_name, email, sex, birthday, id,
-            ], async (error, _results) => {
-              if (error) {
-                onError(error.message);
-                await client.query('ROLLBACK');
-                return;
-              }
-              onSuccess(i18n.t('USER.UPDATED_SUCCESSFULLY'));
-              await client.query('COMMIT');
-            });
-        }, async (error) => {
-          onError(error);
+        if (!user) {
+          console.log(user);
+          onError(i18n.t('USER.ID_NOT_FOUND'));
           await client.query('ROLLBACK');
-        });
-      }
+          return;
+        }
+
+        //Password Hashing
+        client.query(
+          'UPDATE users SET (username,full_name,email,sex,birthday) = ($1,$2,$3,$4,$5) WHERE user_id = $6',
+          [
+            username, full_name, email, sex, birthday, id,
+          ], async (error, _results) => {
+            if (error) {
+              onError(error.message);
+              await client.query('ROLLBACK');
+              return;
+            }
+            onSuccess({
+              user_id: id, username, full_name, email, sex, birthday,
+            });
+            await client.query('COMMIT');
+          });
+      }, async (error) => {
+        onError(error);
+        await client.query('ROLLBACK');
+      });
     });
     client.release();
   } else {

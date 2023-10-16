@@ -1,9 +1,11 @@
-import { ReceivedUser } from '../models/user';
+import {
+  CreateReceivedUser, UpdateReceivedUser,
+} from '../models/user';
 import { ReceivedTask } from '../models/task';
 import { UserPlan } from '../models/plan';
 import { Project } from '../models/project';
 
-export function isReceivedUser(object: any): object is ReceivedUser {
+export function isCreateReceivedUser(object: any): object is CreateReceivedUser {
   return (
     typeof object?.username === 'string'
         && typeof object?.user_password === 'string'
@@ -11,6 +13,15 @@ export function isReceivedUser(object: any): object is ReceivedUser {
         && typeof object?.sex === 'string'
         && typeof object?.birthday === 'string'
         && typeof object?.confirm_password === 'string'
+  );
+}
+
+export function isUpdateReceivedUser(object: any): object is UpdateReceivedUser {
+  return (
+    typeof object?.username === 'string'
+        && typeof object?.full_name === 'string'
+        && typeof object?.sex === 'string'
+        && typeof object?.birthday === 'string'
   );
 }
 

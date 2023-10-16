@@ -15,7 +15,9 @@ import {
 import {
   User,
 } from '../models/user';
-import { isReceivedUser } from '../utils/typeCheck';
+import {
+  isCreateReceivedUser, isUpdateReceivedUser,
+} from '../utils/typeCheck';
 
 
 export const getUsers = async (request: Request, response: Response): Promise<void> => {
@@ -130,7 +132,7 @@ export const createUser = async (request: Request, response: Response): Promise<
     user,
   } = request.body;
 
-  if (!isReceivedUser(user)) {
+  if (!isCreateReceivedUser(user)) {
     response.status(403).json({
       message: i18n.t('USER.WRONG_TYPE'), hasError: true,
     });
@@ -163,7 +165,7 @@ export const updateUser = async (request: Request, response: Response): Promise<
     }
 
     const { user } = request.body;
-    if (!isReceivedUser(user)) {
+    if (!isUpdateReceivedUser(user)) {
       response.status(403).json({
         message: i18n.t('USER.WRONG_TYPE'), hasError: true,
       });
@@ -175,15 +177,15 @@ export const updateUser = async (request: Request, response: Response): Promise<
       token,
       id,
       user,
-      (answer: string | object) => response.status(204).json({
-        answer, hasError: false,
+      (user: object) => response.status(200).json({
+        user, hasError: false,
       }),
-      (message: string | object) => response.status(403).json({
-        message, hasError: true,
+      (answer: string | object) => response.status(403).json({
+        answer, hasError: true,
       }));
   } else {
     response.status(403).json({
-      message: i18n.t('USER.INVALID_ID'), hasError: true,
+      answer: i18n.t('USER.INVALID_ID'), hasError: true,
     });
   }
 };

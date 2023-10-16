@@ -204,3 +204,10 @@ error: terminating connection due to administrator command
     at readableAddChunk (node:internal/streams/readable:316:9)
     at Socket.Readable.push (node:internal/streams/readable:253:10)
     at TCP.onStreamRead (node:internal/stream_base_commons:190:23)
+16/10/2023 11:56:22: error: uncaughtException: migration is not a function
+Error: migration is not a function
+    at /app/src/migrations/index.ts:22:13
+    at step (/app/node_modules/tslib/tslib.js:195:27)
+    at Object.next (/app/node_modules/tslib/tslib.js:176:57)
+    at fulfilled (/app/node_modules/tslib/tslib.js:166:62)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
