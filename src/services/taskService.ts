@@ -6,23 +6,21 @@ import { PoolClient } from 'pg';
 import { Response } from 'express';
 import i18n from 'i18next';
 import {
-  ReceivedTask, Task,
+  ReceivedTask, TaskToSend,
 } from '../models/task';
 
 export const fetchUserTasks = async (
   token: string,
   userId: number,
-  onSuccess: (message: Task[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: TaskToSend[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
     await client.query('BEGIN');
     jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
       if (e) {
-        onError({
-          auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
-        });
+        onError(i18n.t('TOKEN.AUTH_FAILED'));
         await client.query('ROLLBACK');
         return;
       }
@@ -47,64 +45,26 @@ export const fetchUserTasks = async (
   }
 };
 
-export const fetchSharedTasks = async (
-  token: string,
-  userId: number,
-  onSuccess: (message: Task[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
-): Promise<void> => {
-  if (process.env.TOKEN_KEY) {
-    const client: PoolClient = await pool.connect();
-    await client.query('BEGIN');
-    jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
-      if (e) {
-        onError({
-          auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
-        });
-        await client.query('ROLLBACK');
-        return;
-      }
-      client.query(
-        'SELECT t.task_id, task_title, task_description, creation_date, due_date, done, cowork FROM shared_tasks st JOIN tasks t ON st.task_id = t.task_id WHERE st.user_id = $1 ORDER BY creation_date DESC',
-        [userId],
-        async (error, results) => {
-          if (error) {
-            onError(error.message);
-            await client.query('ROLLBACK');
-            return;
-          }
-
-          onSuccess(results.rows);
-          await client.query('COMMIT');
-        });
-    });
-    client.release();
-  } else {
-    onError(i18n.t('TOKEN.NOT_FOUND'));
-  }
-};
-
 export const fetchSingleTask = async (
   token: string,
+  userId: number,
   taskId: number,
-  onSuccess: (message: Task) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: TaskToSend) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
     await client.query('BEGIN');
     jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
       if (e) {
-        onError({
-          auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
-        });
+        onError(i18n.t('TOKEN.AUTH_FAILED'));
         await client.query('ROLLBACK');
         return;
       }
 
       client.query(
-        'SELECT * FROM tasks WHERE task_id = $1 ORDER BY creation_date DESC',
-        [taskId],
+        'SELECT * FROM tasks WHERE task_id = $1 AND user_id = $2 ORDER BY creation_date DESC',
+        [ taskId, userId ],
         async (error, results) => {
           if (error) {
             onError(error.message);
@@ -126,16 +86,14 @@ export const insertTask = async (
   token: string,
   task: ReceivedTask,
   onSuccess: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
     await client.query('BEGIN');
     jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
       if (e) {
-        onError({
-          auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
-        });
+        onError(i18n.t('TOKEN.AUTH_FAILED'));
         await client.query('ROLLBACK');
         return;
       }
@@ -165,19 +123,18 @@ export const insertTask = async (
 
 export const patchTask = async (
   token: string,
+  userId: number,
   taskId: number,
   task: ReceivedTask,
-  onSuccess: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (task: TaskToSend) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
     await client.query('BEGIN');
     jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
       if (e) {
-        onError({
-          auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
-        });
+        onError(i18n.t('TOKEN.AUTH_FAILED'));
         await client.query('ROLLBACK');
         return;
       }
@@ -186,8 +143,14 @@ export const patchTask = async (
         user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done,
       } = task;
 
-      await fetchSingleTask(token, taskId, async (task) => {
+      await fetchSingleTask(token, userId, taskId, async (task) => {
         if (!task) {
+          onError(i18n.t('TASK.NOT_FOUND'));
+          await client.query('ROLLBACK');
+          return;
+        }
+
+        if (task.user_id !== userId) {
           onError(i18n.t('TASK.NOT_FOUND'));
           await client.query('ROLLBACK');
           return;
@@ -202,10 +165,13 @@ export const patchTask = async (
             return;
           }
 
-          onSuccess(i18n.t('TASK.UPDATED'));
+          onSuccess({
+            ...task,
+            task_id: taskId,
+          });
           await client.query('COMMIT');
         });
-      }, (message: string | object) => onError(message));
+      }, (message: string) => onError(message));
     });
     client.release();
   } else {
@@ -215,24 +181,29 @@ export const patchTask = async (
 
 export const removeTask = async (
   token: string,
+  userId: number,
   taskId: number,
   onSuccess: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onError: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
     await client.query('BEGIN');
     jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
       if (e) {
-        onError({
-          auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
-        });
+        onError(i18n.t('TOKEN.AUTH_FAILED'));
         await client.query('ROLLBACK');
         return;
       }
 
-      await fetchSingleTask(token, taskId, async (task) => {
+      await fetchSingleTask(token, userId, taskId, async (task) => {
         if (!task) {
+          onError(i18n.t('TASK.NOT_FOUND'));
+          await client.query('ROLLBACK');
+          return;
+        }
+
+        if (task.user_id !== userId) {
           onError(i18n.t('TASK.NOT_FOUND'));
           await client.query('ROLLBACK');
           return;
@@ -254,7 +225,7 @@ export const removeTask = async (
 
         onSuccess(i18n.t('TASK.DELETED'));
         await client.query('COMMIT');
-      }, (message: string | object) => onError(message));
+      }, (message: string) => onError(message));
     });
 
     client.release();

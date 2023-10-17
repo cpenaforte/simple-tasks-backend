@@ -22,3 +22,7 @@ export type ReceivedTask = {
     urgency: string;
     done: 0 | 1;
 }
+
+export type TaskToSend = ReceivedTask & {
+    readonly task_id: number;
+}

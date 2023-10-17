@@ -14,6 +14,7 @@ import {
 } from '../services/userService';
 import {
   User,
+  UserToSend,
 } from '../models/user';
 import {
   isCreateReceivedUser, isUpdateReceivedUser,
@@ -32,7 +33,7 @@ export const getUsers = async (request: Request, response: Response): Promise<vo
 
   await fetchUsers(
     token,
-    (users: User[]) => response.status(200).json({
+    (users: UserToSend[]) => response.status(200).json({
       users, hasError: false,
     }),
     (message: string | object) => response.status(403).json({
@@ -56,7 +57,7 @@ export const getUserById = async (request: Request, response: Response): Promise
     await fetchUserById(
       token,
       id,
-      (user: User | undefined) => {
+      (user: UserToSend | undefined) => {
         if (user) {
           return response.status(200).json({
             user, hasError: false,
@@ -90,7 +91,7 @@ export const getUserByUsername = async (request: Request, response: Response): P
   await fetchUserByUsername(
     token,
     username,
-    (user: User | undefined) => {
+    (user: UserToSend | undefined) => {
       if (user) {
         return response.status(200).json({
           user, hasError: false,
@@ -177,7 +178,7 @@ export const updateUser = async (request: Request, response: Response): Promise<
       token,
       id,
       user,
-      (user: object) => response.status(200).json({
+      (user: UserToSend) => response.status(200).json({
         user, hasError: false,
       }),
       (answer: string | object) => response.status(403).json({

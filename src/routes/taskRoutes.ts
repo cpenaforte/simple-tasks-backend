@@ -2,14 +2,13 @@ import express from 'express';
 const router = express.Router();
 
 import {
-  getTasks, getSharedTasks, getSingleTask, createTask, updateTask, deleteTask,
+  getTasks, getSingleTask, createTask, updateTask, deleteTask,
 } from '../controllers/taskController';
 
-router.get('/:id', getTasks);
-router.get('/shared/:id', getSharedTasks);
-router.get('/single/:id', getSingleTask);
-router.post('/', createTask);
-router.put('/single/:id', updateTask);
-router.delete('/single/:id', deleteTask);
+router.get('/users/:user_id/tasks', getTasks);
+router.get('/users/:user_id/tasks/:task_id', getSingleTask);
+router.post('/users/:user_id/tasks', createTask);
+router.put('/users/:user_id/tasks/:task_id', updateTask);
+router.delete('/users/:user_id/tasks/:task_id', deleteTask);
 
 export default router;

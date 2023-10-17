@@ -7,35 +7,43 @@ import { PoolClient } from 'pg';
 import { Response } from 'express';
 import i18n from 'i18next';
 import {
-  CreateReceivedUser, UpdateReceivedUser, User,
+  CreateReceivedUser, DBUser, UpdateReceivedUser, User, UserToSend,
 } from '../models/user';
+import { parseUserToSend } from '../utils/commonFunctions';
 
 
 export const fetchUsers = async (
   token: string,
-  onSuccess: (message: User[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: UserToSend[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
     await client.query('BEGIN');
+
     jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
       if (e) {
         onError({
           auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
         });
+
         await client.query('ROLLBACK');
+
         return;
       }
 
       client.query('SELECT * FROM users ORDER BY username ASC', async (error, results) => {
         if (error) {
           onError(error.message);
+
           await client.query('ROLLBACK');
+
           return;
         }
 
-        onSuccess(results.rows);
+        const parsedUsers = results.rows.map((dbUser: DBUser) => parseUserToSend(dbUser));
+        onSuccess(parsedUsers);
+
         await client.query('COMMIT');
       });
     });
@@ -48,28 +56,34 @@ export const fetchUsers = async (
 export const fetchUserById = async (
   token: string,
   id: number,
-  onSuccess: (message: User) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: UserToSend) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
     await client.query('BEGIN');
+
     jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
       if (e) {
         onError({
           auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
         });
+
         await client.query('ROLLBACK');
+
         return;
       }
       client.query('SELECT * FROM users WHERE user_id = $1', [id], async (error, results) => {
         if (error) {
           onError(error.message);
+
           await client.query('ROLLBACK');
+
           return;
         }
 
-        onSuccess(results.rows[0]);
+        onSuccess(parseUserToSend(results.rows[0]));
+
         await client.query('COMMIT');
       });
     });
@@ -82,29 +96,35 @@ export const fetchUserById = async (
 export const fetchUserByUsername = async (
   token: string,
   username: string,
-  onSuccess: (message: User) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (message: UserToSend) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
     const client: PoolClient = await pool.connect();
     await client.query('BEGIN');
+
     jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
       if (e) {
         onError({
           auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
         });
+
         await client.query('ROLLBACK');
+
         return;
       }
 
       client.query('SELECT * FROM users WHERE username = $1', [username], async (error, results) => {
         if (error) {
           onError(error.message);
+
           await client.query('ROLLBACK');
+
           return;
         }
 
-        onSuccess(results.rows[0]);
+        onSuccess(parseUserToSend(results.rows[0]));
+
         await client.query('COMMIT');
       });
     });
@@ -126,11 +146,14 @@ export const fetchUserByEmail = async (
     client.query('SELECT * FROM users WHERE email = $1', [email], async (error, results) => {
       if (error) {
         onError(error.message);
+
         await client.query('ROLLBACK');
+
         return;
       }
 
       onSuccess(results.rows[0]);
+
       await client.query('COMMIT');
     });
     client.release();
@@ -154,7 +177,9 @@ export const insertUser = async (
 
     if (!username || !email || !user_password || !confirm_password) {
       onError(i18n.t('SIGNUP.UNFILLED_FIELDS'));
+
       await client.query('ROLLBACK');
+
       return;
     }
     //Confirm Passwords
@@ -169,7 +194,9 @@ export const insertUser = async (
 
         if (user) {
           onError(i18n.t('SIGNUP.EMAIL_EXISTS'));
+
           await client.query('ROLLBACK');
+
           return;
         }
 
@@ -188,11 +215,14 @@ export const insertUser = async (
               await client.query('ROLLBACK');
               return;
             }
+
             onSuccess(i18n.t('SIGNUP.REGISTERED_SUCCESSFULLY'));
+
             await client.query('COMMIT');
           });
       }, async (error) => {
         onError(error);
+
         await client.query('ROLLBACK');
       });
     }
@@ -206,18 +236,21 @@ export const patchUser = async (
   token: string,
   id: number,
   user: UpdateReceivedUser,
-  onSuccess: (user: object) => void,
+  onSuccess: (user: UserToSend) => void,
   onError: (message: string | object) => void,
 ): Promise<void> => {
   const client: PoolClient = await pool.connect();
   await client.query('BEGIN');
+
   if (process.env.TOKEN_KEY) {
     jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
       if (e) {
         onError({
           auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
         });
+
         await client.query('ROLLBACK');
+
         return;
       }
 
@@ -227,7 +260,9 @@ export const patchUser = async (
 
       if (!username || !email || !sex || !birthday) {
         onError(i18n.t('SIGNUP.UNFILLED_FIELDS'));
+
         await client.query('ROLLBACK');
+
         return;
       }
       //Validation
@@ -235,9 +270,10 @@ export const patchUser = async (
         const user = results;
 
         if (!user) {
-          console.log(user);
           onError(i18n.t('USER.ID_NOT_FOUND'));
+
           await client.query('ROLLBACK');
+
           return;
         }
 
@@ -249,12 +285,16 @@ export const patchUser = async (
           ], async (error, _results) => {
             if (error) {
               onError(error.message);
+
               await client.query('ROLLBACK');
+
               return;
             }
+
             onSuccess({
               user_id: id, username, full_name, email, sex, birthday,
             });
+
             await client.query('COMMIT');
           });
       }, async (error) => {
@@ -276,24 +316,30 @@ export const removeUserById = async (
 ): Promise<void> => {
   const client: PoolClient = await pool.connect();
   await client.query('BEGIN');
+
   if (process.env.TOKEN_KEY) {
     jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
       if (e) {
         onError({
           auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
         });
+
         await client.query('ROLLBACK');
+
         return;
       }
 
       client.query('DELETE FROM users WHERE user_id = $1', [id], async (error, _results) => {
         if (error) {
           onError(error.message);
+
           await client.query('ROLLBACK');
+
           return;
         }
 
         onSuccess('ok');
+
         await client.query('COMMIT');
       });
     });
