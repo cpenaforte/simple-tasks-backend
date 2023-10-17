@@ -3,4 +3,6 @@ export type Project = {
     readonly user_id: number,
     name: string,
     description?: string,
-}
+};
+
+export type ReceivedProject = Omit<Project, 'project_id'>;

@@ -109,6 +109,7 @@ export const createTask = async (request: Request, response: Response): Promise<
 
     await insertTask(
       token,
+      userId,
       task,
       (answer: string) => response.status(201).json({
         message: answer, hasError: false,

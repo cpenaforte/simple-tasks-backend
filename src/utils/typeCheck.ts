@@ -3,7 +3,9 @@ import {
 } from '../models/user';
 import { ReceivedTask } from '../models/task';
 import { UserPlan } from '../models/plan';
-import { Project } from '../models/project';
+import {
+  Project, ReceivedProject,
+} from '../models/project';
 
 export function isCreateReceivedUser(object: any): object is CreateReceivedUser {
   return (
@@ -47,6 +49,13 @@ export function isProject(object: any): object is Project {
   return (
     typeof object?.project_id === 'number'
         && typeof object?.user_id === 'number'
+        && typeof object?.name === 'string'
+  );
+}
+
+export function isReceivedProject(object: any): object is ReceivedProject {
+  return (
+    typeof object?.user_id === 'number'
         && typeof object?.name === 'string'
   );
 }

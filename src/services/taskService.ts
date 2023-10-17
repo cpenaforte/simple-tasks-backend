@@ -84,6 +84,7 @@ export const fetchSingleTask = async (
 
 export const insertTask = async (
   token: string,
+  userId: number,
   task: ReceivedTask,
   onSuccess: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
@@ -101,6 +102,12 @@ export const insertTask = async (
       const {
         user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done,
       } = task;
+
+      if (user_id !== userId) {
+        onError('TASK.NOT_FOUND');
+        await client.query('ROLLBACK');
+        return;
+      }
 
       client.query('INSERT INTO tasks (user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done) values ($1,$2,$3,$4,$5,$6,$7,$8)', [
         user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done,

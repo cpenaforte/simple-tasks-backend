@@ -87,5 +87,5 @@ if (cluster.isPrimary) {
 
   app.use('/api/v1', taskRoutes);
 
-  app.use('/api/v1/projects', projectRoutes);
+  app.use('/api/v1', projectRoutes);
 }
