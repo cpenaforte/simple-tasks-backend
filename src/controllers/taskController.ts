@@ -111,8 +111,8 @@ export const createTask = async (request: Request, response: Response): Promise<
       token,
       userId,
       task,
-      (answer: string) => response.status(201).json({
-        message: answer, hasError: false,
+      (tasks: TaskToSend[]) => response.status(201).json({
+        tasks, hasError: false,
       }),
       (message: string) => response.status(403).json({
         message, hasError: true,

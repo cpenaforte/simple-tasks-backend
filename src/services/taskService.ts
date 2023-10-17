@@ -86,7 +86,7 @@ export const insertTask = async (
   token: string,
   userId: number,
   task: ReceivedTask,
-  onSuccess: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (tasks: TaskToSend[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
@@ -118,8 +118,19 @@ export const insertTask = async (
           return;
         }
 
-        onSuccess(i18n.t('TASK.REGISTERED'));
-        await client.query('COMMIT');
+        client.query(
+          'SELECT * FROM tasks WHERE user_id = $1 ORDER BY creation_date DESC',
+          [userId],
+          async (error, results) => {
+            if (error) {
+              onError(error.message);
+              await client.query('ROLLBACK');
+              return;
+            }
+
+            onSuccess(results.rows);
+            await client.query('COMMIT');
+          });
       });
     });
     client.release();
