@@ -1,6 +1,7 @@
 {
   "LOGIN": {
-    "WRONG_CREDENTIALS": "Wrong email and/or password"
+    "WRONG_CREDENTIALS": "Wrong email and/or password",
+    "LOGOUT_SUCCESS": "Logged out succesfully"
   },
   "SYSTEM": {
     "INTERNAL_ERROR": "Internal server error",
@@ -68,6 +69,7 @@
     "REGISTERED": "Registered project successfully",
     "NOT_FOUND": "Project not found",
     "UPDATED": "Project updated successfully",
-    "DELETED": "Project deleted succesfully"
+    "DELETED": "Project deleted succesfully",
+    "NAME_EXISTS": "Project name already exists"
   }
 }

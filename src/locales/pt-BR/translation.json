@@ -1,6 +1,7 @@
 {
   "LOGIN": {
-    "WRONG_CREDENTIALS": "Email e/ou senha incorreto(s)"
+    "WRONG_CREDENTIALS": "Email e/ou senha incorreto(s)",
+    "LOGOUT_SUCCESS": "Sessão encerrada com sucesso"
   },
   "SYSTEM": {
     "INTERNAL_ERROR": "Erro interno no servidor",
@@ -68,6 +69,7 @@
     "WRONG_TYPE": "O projeto passado não é do tipo correto",
     "NOT_FOUND": "Projeto não encontrado",
     "UPDATED": "Projeto atualizado com sucesso",
-    "DELETED": "Projeto deletado com sucesso"
+    "DELETED": "Projeto deletado com sucesso",
+    "NAME_EXISTS": "Nome do projeto já existe"
   }
 }

@@ -69,11 +69,11 @@ export const checkToken = async (
       if (e || !hasCorrectId) {
         console.log(e);
         onError({
-          auth: false, message: i18n.t('TOKEN.LOGOUT_FAILED'),
+          auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
         });
         return;
       }
-      onSuccess (i18n.t('TOKEN.LOGOUT_SUCCESS'));
+      onSuccess (i18n.t('LOGIN.LOGOUT_SUCCESS'));
     });
   }
 };

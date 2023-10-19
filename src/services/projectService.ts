@@ -108,29 +108,42 @@ export const insertProject = async (
         await client.query('ROLLBACK');
         return;
       }
-
-      client.query('INSERT INTO projects (user_id, name, description) values ($1,$2,$3)', [
-        user_id, name, description,
-      ], async (error, __results) => {
+      client.query('Select * FROM projects WHERE name = $1', [name], async (error, results) => {
         if (error) {
           onError(error.message);
           await client.query('ROLLBACK');
           return;
         }
 
-        client.query(
-          'SELECT * FROM projects WHERE user_id = $1',
-          [userId],
-          async (error, results) => {
-            if (error) {
-              onError(error.message);
-              await client.query('ROLLBACK');
-              return;
-            }
+        if (results.rows.length > 0) {
+          onError(i18n.t('PROJECT.NAME_EXISTS'));
+          await client.query('ROLLBACK');
+          return;
+        }
 
-            onSuccess(results.rows);
-            await client.query('COMMIT');
-          });
+        client.query('INSERT INTO projects (user_id, name, description) values ($1,$2,$3)', [
+          user_id, name, description,
+        ], async (error, __results) => {
+          if (error) {
+            onError(error.message);
+            await client.query('ROLLBACK');
+            return;
+          }
+
+          client.query(
+            'SELECT * FROM projects WHERE user_id = $1',
+            [userId],
+            async (error, results) => {
+              if (error) {
+                onError(error.message);
+                await client.query('ROLLBACK');
+                return;
+              }
+
+              onSuccess(results.rows);
+              await client.query('COMMIT');
+            });
+        });
       });
     });
     client.release();
