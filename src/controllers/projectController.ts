@@ -163,8 +163,8 @@ export const updateProject = async (request: Request, response: Response): Promi
       userId,
       projectId,
       project,
-      (project: Project) => response.status(200).json({
-        project, hasError: false,
+      (projectToSend: Project) => response.status(200).json({
+        project: projectToSend, hasError: false,
       }),
       (message: string) => response.status(403).json({
         message, hasError: true,

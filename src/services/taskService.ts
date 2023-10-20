@@ -144,7 +144,7 @@ export const patchTask = async (
   userId: number,
   taskId: number,
   task: ReceivedTask,
-  onSuccess: (task: TaskToSend) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (taskToSend: TaskToSend) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
@@ -161,21 +161,21 @@ export const patchTask = async (
         user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done,
       } = task;
 
-      await fetchSingleTask(token, userId, taskId, async (task) => {
-        if (!task) {
+      await fetchSingleTask(token, userId, taskId, async (oldTask) => {
+        if (!oldTask) {
           onError(i18n.t('TASK.NOT_FOUND'));
           await client.query('ROLLBACK');
           return;
         }
 
-        if (task.user_id !== userId) {
+        if (oldTask.user_id !== userId) {
           onError(i18n.t('TASK.NOT_FOUND'));
           await client.query('ROLLBACK');
           return;
         }
 
-        client.query('UPDATE tasks SET (user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done) = ($1,$2,$3,$4,$5,$6,$7,$8) WHERE task_id = $7', [
-          user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done,
+        client.query('UPDATE tasks SET (user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done) = ($1,$2,$3,$4,$5,$6,$7,$8) WHERE task_id = $9', [
+          user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done, taskId,
         ], async (error, _results) => {
           if (error) {
             onError(error.message);

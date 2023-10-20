@@ -154,8 +154,8 @@ export const updateTask = async (request: Request, response: Response): Promise<
       userId,
       taskId,
       task,
-      (task: TaskToSend) => response.status(200).json({
-        task, hasError: false,
+      (taskToSend: TaskToSend) => response.status(200).json({
+        task: taskToSend, hasError: false,
       }),
       (message: string | object) => response.status(403).json({
         message, hasError: true,

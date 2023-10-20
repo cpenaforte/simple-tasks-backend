@@ -157,7 +157,7 @@ export const patchProject = async (
   userId: number,
   projectId: number,
   project: ReceivedProject,
-  onSuccess: (project: Project) => Response<unknown, Record<string, unknown>> | Promise<void>,
+  onSuccess: (projectToSend: Project) => Response<unknown, Record<string, unknown>> | Promise<void>,
   onError: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
   if (process.env.TOKEN_KEY) {
@@ -180,8 +180,8 @@ export const patchProject = async (
         return;
       }
 
-      await fetchSingleProject(token, userId, projectId, async (project) => {
-        if (!project) {
+      await fetchSingleProject(token, userId, projectId, async (oldProject) => {
+        if (!oldProject) {
           onError(i18n.t('PROJECT.NOT_FOUND'));
           await client.query('ROLLBACK');
           return;
