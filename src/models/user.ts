@@ -10,7 +10,6 @@ export type UserToSend = UpdateReceivedUser & {
 }
 
 export type CreateReceivedUser = {
-    username: string;
     user_password: string;
     full_name: string;
     email: string;
@@ -24,7 +23,6 @@ export type DBUser = CreateReceivedUser & {
 }
 
 export type UpdateReceivedUser = {
-    username: string;
     full_name: string;
     email: string;
     sex: string;

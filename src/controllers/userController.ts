@@ -6,7 +6,6 @@ import i18n from 'i18next';
 import {
   fetchUsers,
   fetchUserById,
-  fetchUserByUsername,
   fetchUserByEmail,
   insertUser,
   patchUser,
@@ -75,35 +74,6 @@ export const getUserById = async (request: Request, response: Response): Promise
       message: i18n.t('USER.INVALID_ID'), hasError: true,
     });
   }
-};
-
-export const getUserByUsername = async (request: Request, response: Response): Promise<void> => {
-  const { username } = request.body;
-  const { token } = request.headers;
-  if (typeof token !== 'string') {
-    response.status(404).json({
-      message: i18n.t('TOKEN.NOT_FOUND'), hasError: true,
-    });
-
-    return;
-  }
-
-  await fetchUserByUsername(
-    token,
-    username,
-    (user: UserToSend | undefined) => {
-      if (user) {
-        return response.status(200).json({
-          user, hasError: false,
-        });
-      }
-      return response.status(403).json({
-        message: i18n.t('USER.NOT_FOUND'), hasError: true,
-      });
-    },
-    (message: string | object) => response.status(403).json({
-      message, hasError: true,
-    }));
 };
 
 export const getUserByEmail = async (request: Request, response: Response): Promise<void> => {

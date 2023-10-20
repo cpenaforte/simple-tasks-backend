@@ -4,7 +4,6 @@ import { DBUser } from './../models/user';
 export const parseUserToSend = (dbUser : DBUser) => {
   const {
     user_id,
-    username,
     full_name,
     email,
     sex,
@@ -13,7 +12,6 @@ export const parseUserToSend = (dbUser : DBUser) => {
 
   return {
     user_id,
-    username,
     full_name,
     email,
     sex,

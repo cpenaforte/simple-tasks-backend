@@ -30,7 +30,6 @@ export const authenticateUser = async (
             user: {
               user_id: user.user_id,
               full_name: user.full_name,
-              username: user.username,
               email: user.email,
               sex: user.sex,
               birthday: user.birthday,

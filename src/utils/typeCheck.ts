@@ -9,8 +9,7 @@ import {
 
 export function isCreateReceivedUser(object: any): object is CreateReceivedUser {
   return (
-    typeof object?.username === 'string'
-        && typeof object?.user_password === 'string'
+    typeof object?.user_password === 'string'
         && typeof object?.full_name === 'string'
         && typeof object?.sex === 'string'
         && typeof object?.birthday === 'string'
@@ -20,8 +19,7 @@ export function isCreateReceivedUser(object: any): object is CreateReceivedUser 
 
 export function isUpdateReceivedUser(object: any): object is UpdateReceivedUser {
   return (
-    typeof object?.username === 'string'
-        && typeof object?.full_name === 'string'
+    typeof object?.full_name === 'string'
         && typeof object?.sex === 'string'
         && typeof object?.birthday === 'string'
   );

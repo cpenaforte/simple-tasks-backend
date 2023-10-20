@@ -32,7 +32,7 @@ export const fetchUsers = async (
         return;
       }
 
-      client.query('SELECT * FROM users ORDER BY username ASC', async (error, results) => {
+      client.query('SELECT * FROM users ORDER BY email ASC', async (error, results) => {
         if (error) {
           onError(error.message);
 
@@ -93,47 +93,6 @@ export const fetchUserById = async (
   }
 };
 
-export const fetchUserByUsername = async (
-  token: string,
-  username: string,
-  onSuccess: (message: UserToSend) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
-): Promise<void> => {
-  if (process.env.TOKEN_KEY) {
-    const client: PoolClient = await pool.connect();
-    await client.query('BEGIN');
-
-    jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
-      if (e) {
-        onError({
-          auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
-        });
-
-        await client.query('ROLLBACK');
-
-        return;
-      }
-
-      client.query('SELECT * FROM users WHERE username = $1', [username], async (error, results) => {
-        if (error) {
-          onError(error.message);
-
-          await client.query('ROLLBACK');
-
-          return;
-        }
-
-        onSuccess(parseUserToSend(results.rows[0]));
-
-        await client.query('COMMIT');
-      });
-    });
-    client.release();
-  } else {
-    onError(i18n.t('TOKEN.NOT_FOUND'));
-  }
-};
-
 export const fetchUserByEmail = async (
   email: string,
   onSuccess: (message: User) => Response<unknown, Record<string, unknown>> | Promise<void>,
@@ -172,10 +131,10 @@ export const insertUser = async (
     await client.query('BEGIN');
 
     const {
-      username, user_password, full_name, email, sex, birthday, confirm_password,
+      user_password, full_name, email, sex, birthday, confirm_password,
     } = user;
 
-    if (!username || !email || !user_password || !confirm_password) {
+    if (!email || !user_password || !confirm_password) {
       onError(i18n.t('SIGNUP.UNFILLED_FIELDS'));
 
       await client.query('ROLLBACK');
@@ -206,9 +165,9 @@ export const insertUser = async (
         const new_password: string = bcrypt.hashSync(user_password, salt);
 
         client.query(
-          'INSERT INTO users (username,user_password,full_name,email,sex,birthday) VALUES ($1,$2,$3,$4,$5,$6)',
+          'INSERT INTO users (user_password,full_name,email,sex,birthday) VALUES ($1,$2,$3,$4,$5)',
           [
-            username, new_password, full_name, email, sex, birthday,
+            new_password, full_name, email, sex, birthday,
           ], async (error, _results) => {
             if (error) {
               onError(error.message);
@@ -255,10 +214,10 @@ export const patchUser = async (
       }
 
       const {
-        username, full_name, email, sex, birthday,
+        full_name, email, sex, birthday,
       } = user;
 
-      if (!username || !email || !sex || !birthday) {
+      if (!email || !sex || !birthday) {
         onError(i18n.t('SIGNUP.UNFILLED_FIELDS'));
 
         await client.query('ROLLBACK');
@@ -279,9 +238,9 @@ export const patchUser = async (
 
         //Password Hashing
         client.query(
-          'UPDATE users SET (username,full_name,email,sex,birthday) = ($1,$2,$3,$4,$5) WHERE user_id = $6',
+          'UPDATE users SET (full_name,email,sex,birthday) = ($1,$2,$3,$4) WHERE user_id = $5',
           [
-            username, full_name, email, sex, birthday, id,
+            full_name, email, sex, birthday, id,
           ], async (error, _results) => {
             if (error) {
               onError(error.message);
@@ -292,7 +251,7 @@ export const patchUser = async (
             }
 
             onSuccess({
-              user_id: id, username, full_name, email, sex, birthday,
+              user_id: id, full_name, email, sex, birthday,
             });
 
             await client.query('COMMIT');
