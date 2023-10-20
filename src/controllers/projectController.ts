@@ -11,7 +11,9 @@ import {
   removeProject,
 } from '../services/projectService';
 import { isReceivedProject } from '../utils/typeCheck';
-import { Project } from '../models/project';
+import {
+  Project,
+} from '../models/project';
 
 
 export const getProjects = async (request: Request, response: Response): Promise<void> => {

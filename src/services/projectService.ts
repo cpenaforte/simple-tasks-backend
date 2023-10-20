@@ -187,7 +187,7 @@ export const patchProject = async (
           return;
         }
 
-        client.query('UPDATE projects SET (project_id, user_id, name, description) = ($1,$2,$3) WHERE project_id = $4', [
+        client.query('UPDATE projects SET (user_id, name, description) = ($1,$2,$3) WHERE project_id = $4', [
           user_id, name, description, projectId,
         ], async (error, _results) => {
           if (error) {
