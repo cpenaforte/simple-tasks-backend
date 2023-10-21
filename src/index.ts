@@ -66,7 +66,10 @@ if (cluster.isPrimary) {
   );
 
   app.use(corsMiddleware);
-  app.use(rateLimiter);
+
+  if (process.env.NODE_ENV === 'production') {
+    app.use(rateLimiter);
+  }
   app.use(winstonLogger);
 
   const { pid } = process;

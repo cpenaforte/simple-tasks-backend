@@ -7,6 +7,7 @@ export type User = Omit<CreateReceivedUser, 'confirm_password'> & {
 
 export type UserToSend = UpdateReceivedUser & {
     user_id: number;
+    email: string;
 }
 
 export type CreateReceivedUser = {
@@ -24,7 +25,6 @@ export type DBUser = CreateReceivedUser & {
 
 export type UpdateReceivedUser = {
     full_name: string;
-    email: string;
     sex: string;
     birthday: string;
 }

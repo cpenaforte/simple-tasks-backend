@@ -82,6 +82,14 @@ export const fetchUserById = async (
           return;
         }
 
+        if (!results.rows[0]) {
+          onError(i18n.t('USER.ID_NOT_FOUND'));
+
+          await client.query('ROLLBACK');
+
+          return;
+        }
+
         onSuccess(parseUserToSend(results.rows[0]));
 
         await client.query('COMMIT');
@@ -214,10 +222,10 @@ export const patchUser = async (
       }
 
       const {
-        full_name, email, sex, birthday,
+        full_name, sex, birthday,
       } = user;
 
-      if (!email || !sex || !birthday) {
+      if (!sex || !birthday) {
         onError(i18n.t('SIGNUP.UNFILLED_FIELDS'));
 
         await client.query('ROLLBACK');
@@ -225,10 +233,10 @@ export const patchUser = async (
         return;
       }
       //Validation
-      fetchUserById(token, id, async (results: string | object) => {
-        const user = results;
+      fetchUserById(token, id, async (results: UserToSend) => {
+        const dbUser = results;
 
-        if (!user) {
+        if (!dbUser) {
           onError(i18n.t('USER.ID_NOT_FOUND'));
 
           await client.query('ROLLBACK');
@@ -238,9 +246,9 @@ export const patchUser = async (
 
         //Password Hashing
         client.query(
-          'UPDATE users SET (full_name,email,sex,birthday) = ($1,$2,$3,$4) WHERE user_id = $5',
+          'UPDATE users SET (full_name,sex,birthday) = ($1,$2,$3) WHERE user_id = $4',
           [
-            full_name, email, sex, birthday, id,
+            full_name, sex, birthday, id,
           ], async (error, _results) => {
             if (error) {
               onError(error.message);
@@ -251,7 +259,7 @@ export const patchUser = async (
             }
 
             onSuccess({
-              user_id: id, full_name, email, sex, birthday,
+              user_id: id, full_name, email: dbUser.email, sex, birthday,
             });
 
             await client.query('COMMIT');

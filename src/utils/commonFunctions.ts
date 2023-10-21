@@ -1,7 +1,9 @@
-import { DBUser } from './../models/user';
+import {
+  DBUser, UserToSend,
+} from './../models/user';
 // PARSE
 
-export const parseUserToSend = (dbUser : DBUser) => {
+export const parseUserToSend = (dbUser: DBUser): UserToSend => {
   const {
     user_id,
     full_name,

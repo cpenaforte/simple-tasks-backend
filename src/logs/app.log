@@ -289,3 +289,15 @@ Error: error: column "123456" does not exist
     at Object.next (/app/node_modules/tslib/tslib.js:176:57)
     at fulfilled (/app/node_modules/tslib/tslib.js:166:62)
     at processTicksAndRejections (node:internal/process/task_queues:95:5)
+21/10/2023 22:55:17: error: uncaughtException: Cannot set headers after they are sent to the client
+Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+    at new NodeError (node:internal/errors:405:5)
+    at ServerResponse.setHeader (node:_http_outgoing:648:11)
+    at ServerResponse.header (/app/node_modules/express/lib/response.js:794:10)
+    at ServerResponse.send (/app/node_modules/express/lib/response.js:174:12)
+    at ServerResponse.json (/app/node_modules/express/lib/response.js:278:15)
+    at /app/src/controllers/projectController.ts:201:48
+    at /app/src/services/projectService.ts:256:9
+    at step (/app/node_modules/tslib/tslib.js:195:27)
+    at Object.next (/app/node_modules/tslib/tslib.js:176:57)
+    at fulfilled (/app/node_modules/tslib/tslib.js:166:62)
