@@ -301,3 +301,133 @@ Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the cli
     at step (/app/node_modules/tslib/tslib.js:195:27)
     at Object.next (/app/node_modules/tslib/tslib.js:176:57)
     at fulfilled (/app/node_modules/tslib/tslib.js:166:62)
+22/10/2023 19:26:36: error: uncaughtException: Cannot set headers after they are sent to the client
+Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+    at new NodeError (node:internal/errors:405:5)
+    at ServerResponse.setHeader (node:_http_outgoing:648:11)
+    at ServerResponse.header (/app/node_modules/express/lib/response.js:794:10)
+    at ServerResponse.send (/app/node_modules/express/lib/response.js:174:12)
+    at ServerResponse.json (/app/node_modules/express/lib/response.js:278:15)
+    at /app/src/controllers/projectController.ts:201:48
+    at /app/src/services/projectService.ts:256:9
+    at step (/app/node_modules/tslib/tslib.js:195:27)
+    at Object.next (/app/node_modules/tslib/tslib.js:176:57)
+    at fulfilled (/app/node_modules/tslib/tslib.js:166:62)
+23/10/2023 12:51:12: error: uncaughtException: Cannot set headers after they are sent to the client
+Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+    at new NodeError (node:internal/errors:405:5)
+    at ServerResponse.setHeader (node:_http_outgoing:648:11)
+    at ServerResponse.header (/app/node_modules/express/lib/response.js:794:10)
+    at ServerResponse.send (/app/node_modules/express/lib/response.js:174:12)
+    at ServerResponse.json (/app/node_modules/express/lib/response.js:278:15)
+    at /app/src/controllers/projectController.ts:201:48
+    at /app/src/services/projectService.ts:256:9
+    at step (/app/node_modules/tslib/tslib.js:195:27)
+    at Object.next (/app/node_modules/tslib/tslib.js:176:57)
+    at fulfilled (/app/node_modules/tslib/tslib.js:166:62)
+23/10/2023 19:27:00: error: uncaughtException: error: duplicate key value violates unique constraint "users_email_key"
+Error: error: duplicate key value violates unique constraint "users_email_key"
+    at /app/src/migrations/index.ts:22:19
+    at step (/app/node_modules/tslib/tslib.js:195:27)
+    at Object.next (/app/node_modules/tslib/tslib.js:176:57)
+    at fulfilled (/app/node_modules/tslib/tslib.js:166:62)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+23/10/2023 19:27:15: error: uncaughtException: error: duplicate key value violates unique constraint "users_email_key"
+Error: error: duplicate key value violates unique constraint "users_email_key"
+    at /app/src/migrations/index.ts:22:19
+    at step (/app/node_modules/tslib/tslib.js:195:27)
+    at Object.next (/app/node_modules/tslib/tslib.js:176:57)
+    at fulfilled (/app/node_modules/tslib/tslib.js:166:62)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+23/10/2023 19:39:13: error: uncaughtException: error: duplicate key value violates unique constraint "users_email_key"
+Error: error: duplicate key value violates unique constraint "users_email_key"
+    at /app/src/migrations/index.ts:22:19
+    at step (/app/node_modules/tslib/tslib.js:195:27)
+    at Object.next (/app/node_modules/tslib/tslib.js:176:57)
+    at fulfilled (/app/node_modules/tslib/tslib.js:166:62)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+23/10/2023 19:39:23: error: uncaughtException: error: duplicate key value violates unique constraint "users_email_key"
+Error: error: duplicate key value violates unique constraint "users_email_key"
+    at /app/src/migrations/index.ts:22:19
+    at step (/app/node_modules/tslib/tslib.js:195:27)
+    at Object.next (/app/node_modules/tslib/tslib.js:176:57)
+    at fulfilled (/app/node_modules/tslib/tslib.js:166:62)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+23/10/2023 20:02:26: error: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/loginService.ts(31,25): error TS2322: Type '{ user_id: any; full_name: any; email: any; sex: any; birthday: any; }' is not assignable to type 'User'.
+  Property 'user_password' is missing in type '{ user_id: any; full_name: any; email: any; sex: any; birthday: any; }' but required in type 'Omit<Omit<CreateReceivedUser, "confirm_password">, "birthday">'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/loginService.ts(31,25): error TS2322: Type '{ user_id: any; full_name: any; email: any; sex: any; birthday: any; }' is not assignable to type 'User'.
+  Property 'user_password' is missing in type '{ user_id: any; full_name: any; email: any; sex: any; birthday: any; }' but required in type 'Omit<Omit<CreateReceivedUser, "confirm_password">, "birthday">'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1310:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1119:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:960:12)
+    at Module.require (node:internal/modules/cjs/loader:1143:19)
+23/10/2023 20:02:35: error: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/loginService.ts(6,31): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/services/loginService.ts(31,25): error TS2322: Type '{ user_id: any; full_name: any; email: any; sex: any; birthday: any; }' is not assignable to type 'User'.
+  Property 'user_password' is missing in type '{ user_id: any; full_name: any; email: any; sex: any; birthday: any; }' but required in type 'Omit<Omit<CreateReceivedUser, "confirm_password">, "birthday">'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/loginService.ts(6,31): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/services/loginService.ts(31,25): error TS2322: Type '{ user_id: any; full_name: any; email: any; sex: any; birthday: any; }' is not assignable to type 'User'.
+  Property 'user_password' is missing in type '{ user_id: any; full_name: any; email: any; sex: any; birthday: any; }' but required in type 'Omit<Omit<CreateReceivedUser, "confirm_password">, "birthday">'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1310:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1119:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:960:12)
+    at Module.require (node:internal/modules/cjs/loader:1143:19)
+23/10/2023 20:02:50: error: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/loginService.ts(31,25): error TS2322: Type '{ user_id: any; full_name: any; email: any; sex: any; birthday: any; }' is not assignable to type 'User'.
+  Property 'user_password' is missing in type '{ user_id: any; full_name: any; email: any; sex: any; birthday: any; }' but required in type 'Omit<Omit<CreateReceivedUser, "confirm_password">, "birthday">'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/loginService.ts(31,25): error TS2322: Type '{ user_id: any; full_name: any; email: any; sex: any; birthday: any; }' is not assignable to type 'User'.
+  Property 'user_password' is missing in type '{ user_id: any; full_name: any; email: any; sex: any; birthday: any; }' but required in type 'Omit<Omit<CreateReceivedUser, "confirm_password">, "birthday">'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1310:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1119:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:960:12)
+    at Module.require (node:internal/modules/cjs/loader:1143:19)
+23/10/2023 20:03:40: error: uncaughtException: ⨯ Unable to compile TypeScript:
+src/controllers/loginController.ts(42,8): error TS2345: Argument of type '(message: string) => void' is not assignable to parameter of type '(message: string | object) => void'.
+  Types of parameters 'message' and 'message' are incompatible.
+    Type 'string | object' is not assignable to type 'string'.
+      Type 'object' is not assignable to type 'string'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/controllers/loginController.ts(42,8): error TS2345: Argument of type '(message: string) => void' is not assignable to parameter of type '(message: string | object) => void'.
+  Types of parameters 'message' and 'message' are incompatible.
+    Type 'string | object' is not assignable to type 'string'.
+      Type 'object' is not assignable to type 'string'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1310:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1119:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:960:12)
+    at Module.require (node:internal/modules/cjs/loader:1143:19)

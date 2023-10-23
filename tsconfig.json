@@ -31,4 +31,5 @@
     "strictPropertyInitialization": true,
     "strictBindCallApply": true
   },
+  "exclude": ["./coverage", "./dist", "tests", "jest.config.js"],
 }

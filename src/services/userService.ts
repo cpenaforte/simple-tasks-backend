@@ -7,311 +7,303 @@ import { PoolClient } from 'pg';
 import { Response } from 'express';
 import i18n from 'i18next';
 import {
-  CreateReceivedUser, DBUser, UpdateReceivedUser, User, UserToSend,
+    CreateReceivedUser, DBUser, UpdateReceivedUser, User, UserToSend,
 } from '../models/user';
 import { parseUserToSend } from '../utils/commonFunctions';
 
 
 export const fetchUsers = async (
-  token: string,
-  onSuccess: (message: UserToSend[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+    token: string,
+    onSuccess: (message: UserToSend[]) => Response<unknown, Record<string, unknown>> | Promise<void>,
+    onError: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
-  if (process.env.TOKEN_KEY) {
-    const client: PoolClient = await pool.connect();
-    await client.query('BEGIN');
+    if (process.env.TOKEN_KEY) {
+        const client: PoolClient = await pool.connect();
+        await client.query('BEGIN');
 
-    jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
-      if (e) {
-        onError({
-          auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
+        jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
+            if (e) {
+                onError(i18n.t('TOKEN.AUTH_FAILED'));
+
+                await client.query('ROLLBACK');
+
+                return;
+            }
+
+            client.query('SELECT * FROM users ORDER BY email ASC', async (error, results) => {
+                if (error) {
+                    onError(error.message);
+
+                    await client.query('ROLLBACK');
+
+                    return;
+                }
+
+                const parsedUsers = results.rows.map((dbUser: DBUser) => parseUserToSend(dbUser));
+                onSuccess(parsedUsers);
+
+                await client.query('COMMIT');
+            });
         });
-
-        await client.query('ROLLBACK');
-
-        return;
-      }
-
-      client.query('SELECT * FROM users ORDER BY email ASC', async (error, results) => {
-        if (error) {
-          onError(error.message);
-
-          await client.query('ROLLBACK');
-
-          return;
-        }
-
-        const parsedUsers = results.rows.map((dbUser: DBUser) => parseUserToSend(dbUser));
-        onSuccess(parsedUsers);
-
-        await client.query('COMMIT');
-      });
-    });
-    client.release();
-  } else {
-    onError(i18n.t('TOKEN.NOT_FOUND'));
-  }
+        client.release();
+    } else {
+        onError(i18n.t('TOKEN.NOT_FOUND'));
+    }
 };
 
 export const fetchUserById = async (
-  token: string,
-  id: number,
-  onSuccess: (message: UserToSend) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+    token: string,
+    id: number,
+    onSuccess: (message: UserToSend) => Response<unknown, Record<string, unknown>> | Promise<void>,
+    onError: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
-  if (process.env.TOKEN_KEY) {
-    const client: PoolClient = await pool.connect();
-    await client.query('BEGIN');
+    if (process.env.TOKEN_KEY) {
+        const client: PoolClient = await pool.connect();
+        await client.query('BEGIN');
 
-    jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
-      if (e) {
-        onError({
-          auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
+        jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
+            if (e) {
+                onError(i18n.t('TOKEN.AUTH_FAILED'));
+
+                await client.query('ROLLBACK');
+
+                return;
+            }
+            client.query('SELECT * FROM users WHERE user_id = $1', [id], async (error, results) => {
+                if (error) {
+                    onError(error.message);
+
+                    await client.query('ROLLBACK');
+
+                    return;
+                }
+
+                if (!results.rows[0]) {
+                    onError(i18n.t('USER.ID_NOT_FOUND'));
+
+                    await client.query('ROLLBACK');
+
+                    return;
+                }
+
+                onSuccess(parseUserToSend(results.rows[0]));
+
+                await client.query('COMMIT');
+            });
         });
-
-        await client.query('ROLLBACK');
-
-        return;
-      }
-      client.query('SELECT * FROM users WHERE user_id = $1', [id], async (error, results) => {
-        if (error) {
-          onError(error.message);
-
-          await client.query('ROLLBACK');
-
-          return;
-        }
-
-        if (!results.rows[0]) {
-          onError(i18n.t('USER.ID_NOT_FOUND'));
-
-          await client.query('ROLLBACK');
-
-          return;
-        }
-
-        onSuccess(parseUserToSend(results.rows[0]));
-
-        await client.query('COMMIT');
-      });
-    });
-    client.release();
-  } else {
-    onError(i18n.t('TOKEN.NOT_FOUND'));
-  }
+        client.release();
+    } else {
+        onError(i18n.t('TOKEN.NOT_FOUND'));
+    }
 };
 
 export const fetchUserByEmail = async (
-  email: string,
-  onSuccess: (message: User) => Response<unknown, Record<string, unknown>> | Promise<void>,
-  onError: (message: string | object) => Response<unknown, Record<string, unknown>> | Promise<void>,
+    email: string,
+    onSuccess: (message: User) => Response<unknown, Record<string, unknown>> | Promise<void>,
+    onError: (message: string) => Response<unknown, Record<string, unknown>> | Promise<void>,
 ): Promise<void> => {
-  if (process.env.TOKEN_KEY) {
-    const client: PoolClient = await pool.connect();
-    await client.query('BEGIN');
+    if (process.env.TOKEN_KEY) {
+        const client: PoolClient = await pool.connect();
+        await client.query('BEGIN');
 
-    client.query('SELECT * FROM users WHERE email = $1', [email], async (error, results) => {
-      if (error) {
-        onError(error.message);
+        client.query('SELECT * FROM users WHERE email = $1', [email], async (error, results) => {
+            if (error) {
+                onError(error.message);
 
-        await client.query('ROLLBACK');
+                await client.query('ROLLBACK');
 
-        return;
-      }
+                return;
+            }
 
-      onSuccess(results.rows[0]);
+            onSuccess(results.rows[0]);
 
-      await client.query('COMMIT');
-    });
-    client.release();
-  } else {
-    onError(i18n.t('TOKEN.NOT_FOUND'));
-  }
+            await client.query('COMMIT');
+        });
+        client.release();
+    } else {
+        onError(i18n.t('TOKEN.NOT_FOUND'));
+    }
 };
 
 export const insertUser = async (
-  user: CreateReceivedUser,
-  onSuccess: (message: string | object) => void,
-  onError: (message: string | object) => void,
+    user: CreateReceivedUser,
+    onSuccess: (message: string) => void,
+    onError: (message: string) => void,
 ): Promise<void> => {
-  if (process.env.TOKEN_KEY) {
-    const client: PoolClient = await pool.connect();
-    await client.query('BEGIN');
+    if (process.env.TOKEN_KEY) {
+        const client: PoolClient = await pool.connect();
+        await client.query('BEGIN');
 
-    const {
-      user_password, full_name, email, sex, birthday, confirm_password,
-    } = user;
+        const {
+            user_password, full_name, email, sex, birthday, confirm_password,
+        } = user;
 
-    if (!email || !user_password || !confirm_password) {
-      onError(i18n.t('SIGNUP.UNFILLED_FIELDS'));
+        if (!email || !user_password || !confirm_password) {
+            onError(i18n.t('SIGNUP.UNFILLED_FIELDS'));
 
-      await client.query('ROLLBACK');
+            await client.query('ROLLBACK');
 
-      return;
-    }
-    //Confirm Passwords
-    if (user_password !== confirm_password) {
-      onError(i18n.t('SIGNUP.UNMATCHED_PASSWORDS'));
-      await client.query('ROLLBACK');
-      return;
-    } else {
-      //Validation
-      fetchUserByEmail(email, async (results: object) => {
-        const user = results;
-
-        if (user) {
-          onError(i18n.t('SIGNUP.EMAIL_EXISTS'));
-
-          await client.query('ROLLBACK');
-
-          return;
+            return;
         }
+        //Confirm Passwords
+        if (user_password !== confirm_password) {
+            onError(i18n.t('SIGNUP.UNMATCHED_PASSWORDS'));
+            await client.query('ROLLBACK');
+            return;
+        } else {
+            //Validation
+            fetchUserByEmail(email, async (results: object) => {
+                const user = results;
 
-        //Password Hashing
-        const salt: string = bcrypt.genSaltSync(parseInt(process.env.SALT_ROUNDS || '8'));
+                if (user) {
+                    onError(i18n.t('SIGNUP.EMAIL_EXISTS'));
 
-        const new_password: string = bcrypt.hashSync(user_password, salt);
+                    await client.query('ROLLBACK');
 
-        client.query(
-          'INSERT INTO users (user_password,full_name,email,sex,birthday) VALUES ($1,$2,$3,$4,$5)',
-          [
-            new_password, full_name, email, sex, birthday,
-          ], async (error, _results) => {
-            if (error) {
-              onError(error.message);
-              await client.query('ROLLBACK');
-              return;
-            }
+                    return;
+                }
 
-            onSuccess(i18n.t('SIGNUP.REGISTERED_SUCCESSFULLY'));
+                //Password Hashing
+                const salt: string = bcrypt.genSaltSync(parseInt(process.env.SALT_ROUNDS || '8'));
 
-            await client.query('COMMIT');
-          });
-      }, async (error) => {
-        onError(error);
+                const new_password: string = bcrypt.hashSync(user_password, salt);
 
-        await client.query('ROLLBACK');
-      });
+                client.query(
+                    'INSERT INTO users (user_password,full_name,email,sex,birthday) VALUES ($1,$2,$3,$4,$5)',
+                    [
+                        new_password, full_name, email, sex, birthday,
+                    ], async (error, _results) => {
+                        if (error) {
+                            onError(error.message);
+                            await client.query('ROLLBACK');
+                            return;
+                        }
+
+                        onSuccess(i18n.t('SIGNUP.REGISTERED_SUCCESSFULLY'));
+
+                        await client.query('COMMIT');
+                    });
+            }, async (error) => {
+                onError(error);
+
+                await client.query('ROLLBACK');
+            });
+        }
+        client.release();
+    } else {
+        onError(i18n.t('TOKEN.NOT_FOUND'));
     }
-    client.release();
-  } else {
-    onError(i18n.t('TOKEN.NOT_FOUND'));
-  }
 };
 
 export const patchUser = async (
-  token: string,
-  id: number,
-  user: UpdateReceivedUser,
-  onSuccess: (user: UserToSend) => void,
-  onError: (message: string | object) => void,
+    token: string,
+    id: number,
+    user: UpdateReceivedUser,
+    onSuccess: (user: UserToSend) => void,
+    onError: (message: string) => void,
 ): Promise<void> => {
-  const client: PoolClient = await pool.connect();
-  await client.query('BEGIN');
+    const client: PoolClient = await pool.connect();
+    await client.query('BEGIN');
 
-  if (process.env.TOKEN_KEY) {
-    jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
-      if (e) {
-        onError({
-          auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
-        });
+    if (process.env.TOKEN_KEY) {
+        jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
+            if (e) {
+                onError(i18n.t('TOKEN.AUTH_FAILED'));
 
-        await client.query('ROLLBACK');
+                await client.query('ROLLBACK');
 
-        return;
-      }
-
-      const {
-        full_name, sex, birthday,
-      } = user;
-
-      if (!sex || !birthday) {
-        onError(i18n.t('SIGNUP.UNFILLED_FIELDS'));
-
-        await client.query('ROLLBACK');
-
-        return;
-      }
-      //Validation
-      fetchUserById(token, id, async (results: UserToSend) => {
-        const dbUser = results;
-
-        if (!dbUser) {
-          onError(i18n.t('USER.ID_NOT_FOUND'));
-
-          await client.query('ROLLBACK');
-
-          return;
-        }
-
-        //Password Hashing
-        client.query(
-          'UPDATE users SET (full_name,sex,birthday) = ($1,$2,$3) WHERE user_id = $4',
-          [
-            full_name, sex, birthday, id,
-          ], async (error, _results) => {
-            if (error) {
-              onError(error.message);
-
-              await client.query('ROLLBACK');
-
-              return;
+                return;
             }
 
-            onSuccess({
-              user_id: id, full_name, email: dbUser.email, sex, birthday,
-            });
+            const {
+                full_name, sex, birthday,
+            } = user;
 
-            await client.query('COMMIT');
-          });
-      }, async (error) => {
-        onError(error);
-        await client.query('ROLLBACK');
-      });
-    });
-    client.release();
-  } else {
-    onError(i18n.t('TOKEN.NOT_FOUND'));
-  }
+            if (!sex || !birthday) {
+                onError(i18n.t('SIGNUP.UNFILLED_FIELDS'));
+
+                await client.query('ROLLBACK');
+
+                return;
+            }
+            //Validation
+            fetchUserById(token, id, async (results: UserToSend) => {
+                const dbUser = results;
+
+                if (!dbUser) {
+                    onError(i18n.t('USER.ID_NOT_FOUND'));
+
+                    await client.query('ROLLBACK');
+
+                    return;
+                }
+
+                //Password Hashing
+                client.query(
+                    'UPDATE users SET (full_name,sex,birthday) = ($1,$2,$3) WHERE user_id = $4',
+                    [
+                        full_name, sex, birthday, id,
+                    ], async (error, _results) => {
+                        if (error) {
+                            onError(error.message);
+
+                            await client.query('ROLLBACK');
+
+                            return;
+                        }
+
+                        onSuccess({
+                            user_id: id, full_name, email: dbUser.email, sex, birthday,
+                        });
+
+                        await client.query('COMMIT');
+                    });
+            }, async (error) => {
+                onError(error);
+                await client.query('ROLLBACK');
+            });
+        });
+        client.release();
+    } else {
+        onError(i18n.t('TOKEN.NOT_FOUND'));
+    }
 };
 
 export const removeUserById = async (
-  token: string,
-  id: number,
-  onSuccess: (message: string) => void,
-  onError: (message: string | object) => void,
+    token: string,
+    id: number,
+    onSuccess: (message: string) => void,
+    onError: (message: string) => void,
 ): Promise<void> => {
-  const client: PoolClient = await pool.connect();
-  await client.query('BEGIN');
+    const client: PoolClient = await pool.connect();
+    await client.query('BEGIN');
 
-  if (process.env.TOKEN_KEY) {
-    jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
-      if (e) {
-        onError({
-          auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
+    if (process.env.TOKEN_KEY) {
+        jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
+            if (e) {
+                onError(i18n.t('TOKEN.AUTH_FAILED'));
+
+                await client.query('ROLLBACK');
+
+                return;
+            }
+
+            client.query('DELETE FROM users WHERE user_id = $1', [id], async (error, _results) => {
+                if (error) {
+                    onError(error.message);
+
+                    await client.query('ROLLBACK');
+
+                    return;
+                }
+
+                onSuccess('ok');
+
+                await client.query('COMMIT');
+            });
         });
-
-        await client.query('ROLLBACK');
-
-        return;
-      }
-
-      client.query('DELETE FROM users WHERE user_id = $1', [id], async (error, _results) => {
-        if (error) {
-          onError(error.message);
-
-          await client.query('ROLLBACK');
-
-          return;
-        }
-
-        onSuccess('ok');
-
-        await client.query('COMMIT');
-      });
-    });
-    client.release();
-  } else {
-    onError(i18n.t('TOKEN.NOT_FOUND'));
-  }
+        client.release();
+    } else {
+        onError(i18n.t('TOKEN.NOT_FOUND'));
+    }
 };

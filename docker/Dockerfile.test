@@ -1,0 +1,17 @@
+FROM node:18-alpine3.18 AS build
+
+WORKDIR /app
+
+COPY . .
+
+RUN yarn global add nodemon && yarn
+
+FROM node:18-alpine3.18
+
+WORKDIR /app
+
+COPY --from=build /app .
+
+RUN yarn global add node ts-node supertest jest ts-jest @types/jest @types/supertest
+
+CMD [ "yarn", "test" ]

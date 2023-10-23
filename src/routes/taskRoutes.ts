@@ -2,7 +2,7 @@ import express from 'express';
 const router = express.Router();
 
 import {
-  getTasks, getSingleTask, createTask, updateTask, deleteTask,
+    getTasks, getSingleTask, createTask, updateTask, deleteTask,
 } from '../controllers/taskController';
 
 router.get('/users/:user_id/tasks', getTasks);

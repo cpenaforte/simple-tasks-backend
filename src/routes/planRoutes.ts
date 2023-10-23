@@ -2,7 +2,7 @@ import express from 'express';
 const router = express.Router();
 
 import {
-  getPlans, getPlanByTitle, getUserPlanByUserId, createUserPlan, updateUserPlan, deactivateUserPlanByUserId,
+    getPlans, getPlanByTitle, getUserPlanByUserId, createUserPlan, updateUserPlan, deactivateUserPlanByUserId,
 } from '../controllers/planController';
 
 router.get('/', getPlans);

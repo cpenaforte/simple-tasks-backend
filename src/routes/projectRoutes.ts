@@ -2,7 +2,7 @@ import express from 'express';
 const router = express.Router();
 
 import {
-  getProjects, getSingleProject, createProject, updateProject, deleteProject,
+    getProjects, getSingleProject, createProject, updateProject, deleteProject,
 } from '../controllers/projectController';
 
 router.get('/users/:user_id/projects', getProjects);

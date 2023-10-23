@@ -1,9 +1,9 @@
 import app, {
-  Router,
+    Router,
 } from 'express';
 const router: Router = app.Router();
 import {
-  login, logout,
+    login, logout,
 } from '../controllers/loginController';
 
 router.post('/login', login);

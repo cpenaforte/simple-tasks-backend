@@ -1,12 +1,13 @@
-export type Task = ReceivedTask & {
+export type Task = Omit<Omit<ReceivedTask, 'creation_date'>, 'due_date'> & {
     readonly task_id: number;
     readonly user_id: number;
     readonly project_id: number;
     readonly creation_date: Date;
+    readonly due_date?: Date;
     readonly urgency: Urgency;
 }
 
-const enum Urgency {
+export const enum Urgency {
     URGENT = 'urgent',
     IMPORTANT = 'important',
     COMMON = 'common',

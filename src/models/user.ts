@@ -1,4 +1,4 @@
-export type User = Omit<CreateReceivedUser, 'confirm_password'> & {
+export type User = Omit<Omit<CreateReceivedUser, 'confirm_password'>, 'birthday'> & {
     readonly user_id: number;
     readonly user_password: string;
     sex: Gender;
@@ -19,7 +19,7 @@ export type CreateReceivedUser = {
     confirm_password: string;
 }
 
-export type DBUser = CreateReceivedUser & {
+export type DBUser = Omit<CreateReceivedUser, 'confirm_password'> & {
     readonly user_id: number;
 }
 
@@ -29,7 +29,7 @@ export type UpdateReceivedUser = {
     birthday: string;
 }
 
-const enum Gender {
+export const enum Gender {
     MALE = 'male',
     FEMALE = 'female',
 }

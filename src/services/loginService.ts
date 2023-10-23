@@ -3,76 +3,75 @@ import bcrypt from 'bcryptjs';
 import jwt, { Secret } from 'jsonwebtoken';
 import { PoolClient } from 'pg';
 import i18n from 'i18next';
+import { LoginResponse } from '../models/login';
 
 export const authenticateUser = async (
-  email: string, password: string,
-  onSuccess: (message: object) => void,
-  onError: (message: string) => void,
+    email: string, password: string,
+    onSuccess: (message: LoginResponse) => void,
+    onError: (message: string) => void,
 ): Promise<void> => {
-  const client: PoolClient = await pool.connect();
-  await client.query('BEGIN');
-  try {
-    client.query('SELECT * FROM users WHERE email = $1', [email], async (error, results) => {
-      if (error || !results.rows[0]) {
-        onError(i18n.t('LOGIN.WRONG_CREDENTIALS'));
-        await client.query('ROLLBACK');
-        return;
-      }
+    const client: PoolClient = await pool.connect();
+    await client.query('BEGIN');
+    try {
+        client.query('SELECT * FROM users WHERE email = $1', [email], async (error, results) => {
+            if (error || !results.rows[0]) {
+                onError(i18n.t('LOGIN.WRONG_CREDENTIALS'));
+                await client.query('ROLLBACK');
+                return;
+            }
 
-      const user = results.rows[0];
-      const cmp: boolean = email === 'test@simpletasks.com.br' || bcrypt.compareSync(password, user.user_password);
-      if (cmp) {
-        if (process.env.TOKEN_KEY !== undefined) {
-          const secret: Secret = process.env.TOKEN_KEY;
-          const token: string = jwt.sign({ id: user.user_id }, secret, { expiresIn: 3600 });
-          onSuccess({
-            token,
-            user: {
-              user_id: user.user_id,
-              full_name: user.full_name,
-              email: user.email,
-              sex: user.sex,
-              birthday: user.birthday,
-            },
-          });
-          await client.query('COMMIT');
-        } else {
-          onError(i18n.t('SYSTEM.INTERNAL_ERROR'));
-          await client.query('ROLLBACK');
-        }
-      } else {
-        onError(i18n.t('LOGIN.WRONG_CREDENTIALS'));
+            const user = results.rows[0];
+            const cmp: boolean = email === 'test@simpletasks.com.br' || bcrypt.compareSync(password, user.user_password);
+            if (cmp) {
+                if (process.env.TOKEN_KEY !== undefined) {
+                    const secret: Secret = process.env.TOKEN_KEY;
+                    const token: string = jwt.sign({ id: user.user_id }, secret, { expiresIn: 3600 });
+                    onSuccess({
+                        token,
+                        user: {
+                            user_id: user.user_id,
+                            full_name: user.full_name,
+                            email: user.email,
+                            sex: user.sex,
+                            birthday: user.birthday,
+                        },
+                    });
+                    await client.query('COMMIT');
+                } else {
+                    onError(i18n.t('SYSTEM.INTERNAL_ERROR'));
+                    await client.query('ROLLBACK');
+                }
+            } else {
+                onError(i18n.t('LOGIN.WRONG_CREDENTIALS'));
+                await client.query('ROLLBACK');
+            }
+        });
+    } catch (error) {
+        onError(i18n.t('SYSTEM.INTERNAL_ERROR'));
         await client.query('ROLLBACK');
-      }
-    });
-  } catch (error) {
-    onError(i18n.t('SYSTEM.INTERNAL_ERROR'));
-    await client.query('ROLLBACK');
-  }
+    }
 
-  client.release();
+    client.release();
 };
 
 export const checkToken = async (
-  user_id : number,
-  token : string,
-  onSuccess: (message: string) => void,
-  onError: (message: string | object) => void,
+    user_id : number,
+    token : string,
+    onSuccess: (message: string) => void,
+    onError: (message: string) => void,
 ): Promise<void> => {
-  const secret = process.env.TOKEN_KEY;
+    const secret = process.env.TOKEN_KEY;
 
-  if (secret) {
+    if (secret) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    jwt.verify(token, secret, async (e, decoded) => {
-      const hasCorrectId = typeof decoded !== 'string' && decoded?.id && decoded?.id == user_id;
-      if (e || !hasCorrectId) {
-        console.log(e);
-        onError({
-          auth: false, message: i18n.t('TOKEN.AUTH_FAILED'),
+        jwt.verify(token, secret, async (e, decoded) => {
+            const hasCorrectId = typeof decoded !== 'string' && decoded?.id && decoded?.id == user_id;
+            if (e || !hasCorrectId) {
+                console.log(e);
+                onError(i18n.t('TOKEN.AUTH_FAILED'));
+                return;
+            }
+            onSuccess (i18n.t('LOGIN.LOGOUT_SUCCESS'));
         });
-        return;
-      }
-      onSuccess (i18n.t('LOGIN.LOGOUT_SUCCESS'));
-    });
-  }
+    }
 };
