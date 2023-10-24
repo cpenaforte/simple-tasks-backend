@@ -18,7 +18,7 @@ jobs:
       - checkout             
       - run: node --version
       - node/install-packages:
-          pkg-manager: npm
+          pkg-manager: yarn
       - run:
           command: yarn test
           name: Run unit tests
