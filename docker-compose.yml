@@ -9,7 +9,6 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=14253678
       - POSTGRES_DB=st_db
-    restart: always
 
   app:
     container_name: app
@@ -25,7 +24,6 @@ services:
       - .env
     depends_on:
       - postgres
-    restart: always
 
 volumes:
   node_modules:

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon",
     "build": "rimraf ./build && tsc",
-    "test": "jest --coverage",
+    "test": "jest --coverage -i",
     "start": "yarn build && node build/index.js"
   },
   "private": true,
