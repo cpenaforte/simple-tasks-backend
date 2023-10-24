@@ -31,14 +31,14 @@ const migrate = async () => {
         console.log(i18n.t('MIGRATION.STARTING_MIGRATIONS'));
         await client.query('CREATE TABLE IF NOT EXISTS migrations (migration_id varchar(20) primary key, last_modified timestamp not null)');
 
-        const files: Array<string> = fs.readdirSync('./src/migrations/queries');
+        const files: Array<string> = fs.readdirSync(__dirname + '/queries');
         files.sort();
 
         files.forEach(async (file: string) => {
             const file_id: string = file.substring(0, 15);
             // eslint-disable-next-line @typescript-eslint/no-var-requires
             const migration: (client: PoolClient) => void = require('./queries/' + file);
-            const { mtime } = fs.statSync('./src/migrations/queries/' + file);
+            const { mtime } = fs.statSync(__dirname + '/queries/' + file);
 
             const dbMigration: void | QueryResult<{
         migration_id: string, last_modified: Date

@@ -1,5 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+const fs = require('fs');
+
+if (!fs.existsSync('.env')) {
+    if (process.env.NODE_ENV === 'production') {
+        fs.copyFileSync('.env.production', '.env');
+    } else if (process.env.NODE_ENV === 'test') {
+        fs.copyFileSync('.env.test', '.env');
+    } else {
+        fs.copyFileSync('.env.development', '.env');
+    }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 const port = +(process.env.PORT || 3000);
 

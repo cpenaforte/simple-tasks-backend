@@ -5,9 +5,13 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon",
-    "build": "rimraf ./build && tsc",
+    "build:production": "NODE_ENV=production rimraf ./build && tsc",
+    "build:development": "NODE_ENV=development rimraf ./build && tsc",
+    "build:test": "NODE_ENV=test rimraf ./build && tsc",
     "test": "jest --coverage -i",
-    "start": "yarn build && node build/index.js"
+    "start:production": "NODE_ENV=production yarn build:production && node build/server.js",
+    "start:development": "NODE_ENV=development yarn build:development && node build/server.js",
+    "start:test": "NODE_ENV=production yarn build:test && node build/server.js"
   },
   "private": true,
   "author": "Carlos Penaforte",
