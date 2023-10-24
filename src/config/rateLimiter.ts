@@ -19,6 +19,10 @@ const options: IRateLimiterStoreNoAutoExpiryOptions = {
 const rateLimiter: RateLimiterPostgres = new RateLimiterPostgres(options);
 
 export default (req: Request, res: Response, next: NextFunction): void => {
+    if (!req.ip) {
+        return;
+    }
+
     rateLimiter
         .consume(req.ip)
         .then(() => {
