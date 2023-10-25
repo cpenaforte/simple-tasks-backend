@@ -11,14 +11,18 @@ export const authenticateUser = async (
     onError: (message: string) => void,
 ): Promise<void> => {
     const client: PoolClient = await pool.connect();
-    await client.query('BEGIN');
+
     try {
+        await client.query('BEGIN');
+
         client.query('SELECT * FROM users WHERE email = $1', [email], async (error, results) => {
             if (error || !results.rows[0]) {
                 onError(i18n.t('LOGIN.WRONG_CREDENTIALS'));
                 await client.query('ROLLBACK');
                 return;
             }
+
+            await client.query('COMMIT');
 
             const user = results.rows[0];
             const cmp: boolean = email === 'test@simpletasks.com.br' || bcrypt.compareSync(password, user.user_password);
@@ -36,19 +40,15 @@ export const authenticateUser = async (
                             birthday: user.birthday,
                         },
                     });
-                    await client.query('COMMIT');
                 } else {
                     onError(i18n.t('SYSTEM.INTERNAL_ERROR'));
-                    await client.query('ROLLBACK');
                 }
             } else {
                 onError(i18n.t('LOGIN.WRONG_CREDENTIALS'));
-                await client.query('ROLLBACK');
             }
         });
     } catch (error) {
         onError(i18n.t('SYSTEM.INTERNAL_ERROR'));
-        await client.query('ROLLBACK');
     }
 
     client.release();

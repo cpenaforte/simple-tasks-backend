@@ -17,13 +17,14 @@ export const fetchUserProjects = async (
 ): Promise<void> => {
     if (process.env.TOKEN_KEY) {
         const client: PoolClient = await pool.connect();
-        await client.query('BEGIN');
+
         jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
             if (e) {
                 onError(i18n.t('TOKEN.AUTH_FAILED'));
-                await client.query('ROLLBACK');
                 return;
             }
+
+            await client.query('BEGIN');
 
             client.query(
                 'SELECT * FROM projects WHERE user_id = $1',
@@ -54,13 +55,14 @@ export const fetchSingleProject = async (
 ): Promise<void> => {
     if (process.env.TOKEN_KEY) {
         const client: PoolClient = await pool.connect();
-        await client.query('BEGIN');
+
         jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
             if (e) {
                 onError(i18n.t('TOKEN.AUTH_FAILED'));
-                await client.query('ROLLBACK');
                 return;
             }
+
+            await client.query('BEGIN');
 
             client.query(
                 'SELECT * FROM projects WHERE project_id = $1 AND user_id = $2',
@@ -91,11 +93,10 @@ export const insertProject = async (
 ): Promise<void> => {
     if (process.env.TOKEN_KEY) {
         const client: PoolClient = await pool.connect();
-        await client.query('BEGIN');
+
         jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
             if (e) {
                 onError(i18n.t('TOKEN.AUTH_FAILED'));
-                await client.query('ROLLBACK');
                 return;
             }
 
@@ -105,9 +106,11 @@ export const insertProject = async (
 
             if (user_id !== userId) {
                 onError(i18n.t('USER.ID_NOT_FOUND'));
-                await client.query('ROLLBACK');
                 return;
             }
+
+            await client.query('BEGIN');
+
             client.query('Select * FROM projects WHERE name = $1', [name], async (error, results) => {
                 if (error) {
                     onError(error.message);
@@ -120,6 +123,9 @@ export const insertProject = async (
                     await client.query('ROLLBACK');
                     return;
                 }
+                await client.query('COMMIT');
+
+                await client.query('BEGIN');
 
                 client.query('INSERT INTO projects (user_id, name, description) values ($1,$2,$3)', [
                     user_id, name, description,
@@ -129,6 +135,10 @@ export const insertProject = async (
                         await client.query('ROLLBACK');
                         return;
                     }
+
+                    await client.query('COMMIT');
+
+                    await client.query('BEGIN');
 
                     client.query(
                         'SELECT * FROM projects WHERE user_id = $1',
@@ -162,11 +172,10 @@ export const patchProject = async (
 ): Promise<void> => {
     if (process.env.TOKEN_KEY) {
         const client: PoolClient = await pool.connect();
-        await client.query('BEGIN');
+
         jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
             if (e) {
                 onError(i18n.t('TOKEN.AUTH_FAILED'));
-                await client.query('ROLLBACK');
                 return;
             }
 
@@ -176,16 +185,16 @@ export const patchProject = async (
 
             if (user_id !== userId) {
                 onError(i18n.t('USER.ID_NOT_FOUND'));
-                await client.query('ROLLBACK');
                 return;
             }
 
             await fetchSingleProject(token, userId, projectId, async (oldProject) => {
                 if (!oldProject) {
                     onError(i18n.t('PROJECT.NOT_FOUND'));
-                    await client.query('ROLLBACK');
                     return;
                 }
+
+                await client.query('BEGIN');
 
                 client.query('UPDATE projects SET (user_id, name, description) = ($1,$2,$3) WHERE project_id = $4', [
                     user_id, name, description, projectId,
@@ -218,26 +227,25 @@ export const removeProject = async (
 ): Promise<void> => {
     if (process.env.TOKEN_KEY) {
         const client: PoolClient = await pool.connect();
-        await client.query('BEGIN');
+
         jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
             if (e) {
                 onError(i18n.t('TOKEN.AUTH_FAILED'));
-                await client.query('ROLLBACK');
                 return;
             }
 
             await fetchSingleProject(token, userId, projectId, async (project) => {
                 if (!project) {
                     onError(i18n.t('PROJECT.NOT_FOUND'));
-                    await client.query('ROLLBACK');
                     return;
                 }
 
                 if (project.user_id !== userId) {
                     onError(i18n.t('USER.ID_NOT_FOUND'));
-                    await client.query('ROLLBACK');
                     return;
                 }
+
+                await client.query('BEGIN');
 
                 await client.query('DELETE FROM projects WHERE project_id = $1', [projectId])
                     .catch(async (error) => {
@@ -245,6 +253,10 @@ export const removeProject = async (
                         await client.query('ROLLBACK');
                         return;
                     });
+
+                await client.query('COMMIT');
+
+                await client.query('BEGIN');
 
                 await client.query('DELETE FROM tasks WHERE project_id = $1', [projectId])
                     .catch(async (error) => {

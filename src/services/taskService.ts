@@ -17,13 +17,14 @@ export const fetchUserTasks = async (
 ): Promise<void> => {
     if (process.env.TOKEN_KEY) {
         const client: PoolClient = await pool.connect();
-        await client.query('BEGIN');
+
         jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
             if (e) {
                 onError(i18n.t('TOKEN.AUTH_FAILED'));
-                await client.query('ROLLBACK');
                 return;
             }
+
+            await client.query('BEGIN');
 
             client.query(
                 'SELECT * FROM tasks WHERE user_id = $1 ORDER BY creation_date DESC',
@@ -35,8 +36,9 @@ export const fetchUserTasks = async (
                         return;
                     }
 
-                    onSuccess(results.rows);
                     await client.query('COMMIT');
+
+                    onSuccess(results.rows);
                 });
         });
         client.release();
@@ -54,13 +56,14 @@ export const fetchSingleTask = async (
 ): Promise<void> => {
     if (process.env.TOKEN_KEY) {
         const client: PoolClient = await pool.connect();
-        await client.query('BEGIN');
+
         jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
             if (e) {
                 onError(i18n.t('TOKEN.AUTH_FAILED'));
-                await client.query('ROLLBACK');
                 return;
             }
+
+            await client.query('BEGIN');
 
             client.query(
                 'SELECT * FROM tasks WHERE task_id = $1 AND user_id = $2 ORDER BY creation_date DESC',
@@ -72,8 +75,9 @@ export const fetchSingleTask = async (
                         return;
                     }
 
-                    onSuccess(results.rows[0]);
                     await client.query('COMMIT');
+
+                    onSuccess(results.rows[0]);
                 });
         });
         client.release();
@@ -91,11 +95,10 @@ export const insertTask = async (
 ): Promise<void> => {
     if (process.env.TOKEN_KEY) {
         const client: PoolClient = await pool.connect();
-        await client.query('BEGIN');
+
         jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
             if (e) {
                 onError(i18n.t('TOKEN.AUTH_FAILED'));
-                await client.query('ROLLBACK');
                 return;
             }
 
@@ -105,9 +108,10 @@ export const insertTask = async (
 
             if (user_id !== userId) {
                 onError('TASK.NOT_FOUND');
-                await client.query('ROLLBACK');
                 return;
             }
+
+            await client.query('BEGIN');
 
             client.query('INSERT INTO tasks (user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done) values ($1,$2,$3,$4,$5,$6,$7,$8)', [
                 user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done,
@@ -117,6 +121,10 @@ export const insertTask = async (
                     await client.query('ROLLBACK');
                     return;
                 }
+
+                await client.query('COMMIT');
+
+                await client.query('BEGIN');
 
                 client.query(
                     'SELECT * FROM tasks WHERE user_id = $1 ORDER BY creation_date DESC',
@@ -128,8 +136,9 @@ export const insertTask = async (
                             return;
                         }
 
-                        onSuccess(results.rows);
                         await client.query('COMMIT');
+
+                        onSuccess(results.rows);
                     });
             });
         });
@@ -149,11 +158,10 @@ export const patchTask = async (
 ): Promise<void> => {
     if (process.env.TOKEN_KEY) {
         const client: PoolClient = await pool.connect();
-        await client.query('BEGIN');
+
         jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
             if (e) {
                 onError(i18n.t('TOKEN.AUTH_FAILED'));
-                await client.query('ROLLBACK');
                 return;
             }
 
@@ -164,15 +172,15 @@ export const patchTask = async (
             await fetchSingleTask(token, userId, taskId, async (oldTask) => {
                 if (!oldTask) {
                     onError(i18n.t('TASK.NOT_FOUND'));
-                    await client.query('ROLLBACK');
                     return;
                 }
 
                 if (oldTask.user_id !== userId) {
                     onError(i18n.t('TASK.NOT_FOUND'));
-                    await client.query('ROLLBACK');
                     return;
                 }
+
+                await client.query('BEGIN');
 
                 client.query('UPDATE tasks SET (user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done) = ($1,$2,$3,$4,$5,$6,$7,$8) WHERE task_id = $9', [
                     user_id, project_id, task_title, task_description, creation_date, due_date, urgency, done, taskId,
@@ -183,11 +191,12 @@ export const patchTask = async (
                         return;
                     }
 
+                    await client.query('COMMIT');
+
                     onSuccess({
                         ...task,
                         task_id: taskId,
                     });
-                    await client.query('COMMIT');
                 });
             }, (message: string) => onError(message));
         });
@@ -206,7 +215,7 @@ export const removeTask = async (
 ): Promise<void> => {
     if (process.env.TOKEN_KEY) {
         const client: PoolClient = await pool.connect();
-        await client.query('BEGIN');
+
         jwt.verify(token, process.env.TOKEN_KEY, async (e, _decoded) => {
             if (e) {
                 onError(i18n.t('TOKEN.AUTH_FAILED'));
@@ -227,12 +236,18 @@ export const removeTask = async (
                     return;
                 }
 
+                await client.query('BEGIN');
+
                 await client.query('DELETE FROM tasks WHERE task_id = $1', [taskId])
                     .catch(async (error) => {
                         onError(error.message);
                         await client.query('ROLLBACK');
                         return;
                     });
+
+                await client.query('COMMIT');
+
+                await client.query('BEGIN');
 
                 await client.query('DELETE FROM shared_tasks WHERE task_id = $1', [taskId])
                     .catch(async (error) => {
@@ -241,8 +256,9 @@ export const removeTask = async (
                         return;
                     });
 
-                onSuccess(i18n.t('TASK.DELETED'));
                 await client.query('COMMIT');
+
+                onSuccess(i18n.t('TASK.DELETED'));
             }, (message: string) => onError(message));
         });
 
