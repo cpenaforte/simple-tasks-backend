@@ -15,6 +15,12 @@ jobs:
         environment:
           NODE_ENV: test
           HOSTNAME: localhost
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: 14253678
+          POSTGRES_DB: st_db
+          SALT_ROUNDS: 10
+          TOKEN_KEY: simpleTasks
+          MAX_QUEUE: 50
       - image: cimg/postgres:15.4
         environment:
           POSTGRES_USER: admin
