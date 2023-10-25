@@ -8,7 +8,7 @@
     "build:production": "NODE_ENV=production rimraf ./build && tsc",
     "build:development": "NODE_ENV=development rimraf ./build && tsc",
     "build:test": "NODE_ENV=test rimraf ./build && tsc",
-    "test": "jest --coverage -i",
+    "test": "NODE_ENV=test jest --coverage -i",
     "start:production": "NODE_ENV=production yarn build:production && node build/server.js",
     "start:development": "NODE_ENV=development yarn build:development && node build/server.js",
     "start:test": "NODE_ENV=production yarn build:test && node build/server.js"
