@@ -12,6 +12,17 @@ jobs:
       name: node/default
       tag: '18.16'
 
+      # Primary container image where all commands run
+    docker:
+    # Service container image
+      - image: postgres:alpine
+        ports:
+          "5432:5432"
+        environment:
+          POSTGRES_USER=admin
+          POSTGRES_PASSWORD=14253678
+          POSTGRES_DB=st_db
+
     # Add steps to the job
     # See: https://circleci.com/docs/configuration-reference/#steps
     steps:
