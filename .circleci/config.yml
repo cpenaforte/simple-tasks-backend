@@ -11,12 +11,15 @@ jobs:
       # Primary container image where all commands run
     docker:
     # Service container image
-      - image: postgres:alpine
+      - image: cimg/node:18.18
         environment:
-          POSTGRES_USER=admin
-          POSTGRES_PASSWORD=14253678
-          POSTGRES_DB=st_db
-      - image: node:18
+          NODE_ENV: test
+          HOSTNAME: localhost
+      - image: cimg/postgres:15.4
+        environment:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: 14253678
+          POSTGRES_DB: st_db
 
     # Add steps to the job
     # See: https://circleci.com/docs/configuration-reference/#steps
@@ -25,6 +28,8 @@ jobs:
       - run: node --version
       - node/install-packages:
           pkg-manager: yarn
+      # Wait for Postgres connection to open.
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run:
           command: yarn test
           name: Run unit tests
