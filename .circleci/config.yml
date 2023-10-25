@@ -8,10 +8,6 @@ orbs:
 # See: https://circleci.com/docs/configuration-reference/#jobs
 jobs:
   build_and_test:
-    executor:
-      name: node/default
-      tag: '18.16'
-
       # Primary container image where all commands run
     docker:
     # Service container image
@@ -20,6 +16,7 @@ jobs:
           POSTGRES_USER=admin
           POSTGRES_PASSWORD=14253678
           POSTGRES_DB=st_db
+      - image: node:18
 
     # Add steps to the job
     # See: https://circleci.com/docs/configuration-reference/#steps
