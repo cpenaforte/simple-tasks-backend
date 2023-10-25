@@ -18,9 +18,8 @@ const runMigration = async (
     } catch (error: unknown) {
         console.log(i18n.t('MIGRATION.FAILED_RUNNING', { migrationId }));
         await client.query('ROLLBACK');
-        if (error instanceof Error) {
-            throw new Error(error.message);
-        }
+
+        process.abort();
     }
 };
 const migrate = async () => {

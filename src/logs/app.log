@@ -626,3 +626,49 @@ Error: error: duplicate key value violates unique constraint "users_email_key"
     at Object.next (/app/node_modules/tslib/tslib.js:176:57)
     at fulfilled (/app/node_modules/tslib/tslib.js:166:62)
     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 12:03:46: error: uncaughtException: error: syntax error at end of input
+Error: error: syntax error at end of input
+    at /app/build/migrations/index.js:26:27
+    at step (/app/node_modules/tslib/tslib.js:195:27)
+    at Object.next (/app/node_modules/tslib/tslib.js:176:57)
+    at fulfilled (/app/node_modules/tslib/tslib.js:166:62)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 12:07:29: error: uncaughtException: error: syntax error at end of input
+Error: error: syntax error at end of input
+    at /app/build/migrations/index.js:25:23
+    at step (/app/node_modules/tslib/tslib.js:195:27)
+    at Object.next (/app/node_modules/tslib/tslib.js:176:57)
+    at fulfilled (/app/node_modules/tslib/tslib.js:166:62)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 12:12:17: error: uncaughtException: getaddrinfo EAI_AGAIN dpg-cks2c305vl2c73cpdtbg-a
+Error: getaddrinfo EAI_AGAIN dpg-cks2c305vl2c73cpdtbg-a
+    at /app/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 12:14:31: error: uncaughtException: getaddrinfo EAI_AGAIN dpg-cks2c305vl2c73cpdtbg-a
+Error: getaddrinfo EAI_AGAIN dpg-cks2c305vl2c73cpdtbg-a
+    at /app/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 12:14:31: error: uncaughtException: getaddrinfo EAI_AGAIN dpg-cks2c305vl2c73cpdtbg-a
+Error: getaddrinfo EAI_AGAIN dpg-cks2c305vl2c73cpdtbg-a
+    at /app/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 12:15:27: error: uncaughtException: getaddrinfo EAI_AGAIN dpg-cks2c305vl2c73cpdtbg-a
+Error: getaddrinfo EAI_AGAIN dpg-cks2c305vl2c73cpdtbg-a
+    at /app/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 12:49:51: error: uncaughtException: connection is insecure (try using `sslmode=require`)
+error: connection is insecure (try using `sslmode=require`)
+    at /app/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 12:55:01: error: uncaughtException: permission denied for schema public
+error: permission denied for schema public
+    at /app/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 12:58:51: error: uncaughtException: permission denied for schema public
+error: permission denied for schema public
+    at /app/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 13:01:49: error: uncaughtException: permission denied for schema public
+error: permission denied for schema public
+    at /app/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)

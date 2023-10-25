@@ -13,6 +13,8 @@ jobs:
     # Service container image
       - image: cimg/node:18.18
         environment:
+          PORT: 3000
+          DB_PORT: 5432
           NODE_ENV: test
           HOSTNAME: localhost
           POSTGRES_USER: admin
