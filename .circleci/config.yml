@@ -46,7 +46,7 @@ jobs:
           name: Start server
           background: true
       - run:
-          command: sleep 5 && curl -I localhost:3000
+          command: sleep 15 && curl -I localhost:3000
           name: Verify server is running
 
 # Orchestrate jobs using workflows
