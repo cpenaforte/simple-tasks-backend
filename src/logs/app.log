@@ -680,3 +680,51 @@ Error: getaddrinfo ENOTFOUND postgres
 Error: getaddrinfo ENOTFOUND postgres
     at /home/carlos/workspace/simple-tasks-backend/node_modules/pg-pool/index.js:45:11
     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 13:48:02: error: uncaughtException: getaddrinfo ENOTFOUND postgres
+Error: getaddrinfo ENOTFOUND postgres
+    at /home/carlos/workspace/simple-tasks-backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 13:48:02: error: uncaughtException: getaddrinfo ENOTFOUND postgres
+Error: getaddrinfo ENOTFOUND postgres
+    at /home/carlos/workspace/simple-tasks-backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 13:49:14: error: uncaughtException: getaddrinfo ENOTFOUND postgres
+Error: getaddrinfo ENOTFOUND postgres
+    at /home/carlos/workspace/simple-tasks-backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 13:49:14: error: uncaughtException: getaddrinfo ENOTFOUND postgres
+Error: getaddrinfo ENOTFOUND postgres
+    at /home/carlos/workspace/simple-tasks-backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 17:19:01: error: uncaughtException: Client was closed and is not queryable
+Error: Client was closed and is not queryable
+    at /app/node_modules/pg/lib/client.js:526:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 17:19:01: error: uncaughtException: Client was closed and is not queryable
+Error: Client was closed and is not queryable
+    at /app/node_modules/pg/lib/client.js:526:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 17:19:01: error: uncaughtException: Client was closed and is not queryable
+Error: Client was closed and is not queryable
+    at /app/node_modules/pg/lib/client.js:526:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 17:40:22: error: uncaughtException: Client was closed and is not queryable
+Error: Client was closed and is not queryable
+    at /app/node_modules/pg/lib/client.js:526:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 17:40:22: error: uncaughtException: Client was closed and is not queryable
+Error: Client was closed and is not queryable
+    at /app/node_modules/pg/lib/client.js:526:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 17:40:22: error: uncaughtException: Client was closed and is not queryable
+Error: Client was closed and is not queryable
+    at /app/node_modules/pg/lib/client.js:526:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 17:40:22: error: uncaughtException: Client was closed and is not queryable
+Error: Client was closed and is not queryable
+    at /app/node_modules/pg/lib/client.js:526:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+25/10/2023 17:40:22: error: uncaughtException: Client was closed and is not queryable
+Error: Client was closed and is not queryable
+    at /app/node_modules/pg/lib/client.js:526:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
