@@ -49,9 +49,34 @@ jobs:
           command: sleep 15 && curl -I localhost:3000
           name: Verify server is running
 
+  deploy:
+    machine:
+      image: ubuntu-2004:current
+    resource_class: medium
+    steps:
+      - run:
+          name: Deploy API to Render
+          command: |
+            response=$(curl -s -w "%{http_code}" -o response.txt $DEPLOY_URI)
+            response_code=${response:(-3)}
+            if [ $response_code -eq 200 ]; then
+              echo "Deployment successful!"
+              cat response.txt  # Print the response body
+            else
+              echo "Deployment failed with response code: $response_code"
+              cat response.txt  # Print the response body
+              exit 1
+            fi
+
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
 workflows:
   build_and_test_app:
     jobs:
       - build_and_test
+      - deploy:
+          requires:
+           - build_and_test
+          filters:
+            branches:
+                only: master
