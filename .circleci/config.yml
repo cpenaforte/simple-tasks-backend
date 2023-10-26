@@ -42,6 +42,9 @@ jobs:
           command: yarn test
           name: Run unit tests
       - run:
+          command: yarn build:production
+          name: Build for production
+      - run:
           command: yarn start:production
           name: Start server
           background: true
