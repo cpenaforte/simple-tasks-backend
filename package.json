@@ -5,9 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon",
-    "build:production": "NODE_ENV=production rimraf ./build && tsc",
-    "build:development": "NODE_ENV=development rimraf ./build && tsc",
-    "build:test": "NODE_ENV=test rimraf ./build && tsc",
+    "build": "rimraf ./build && tsc",
     "test": "NODE_ENV=test jest --coverage -i",
     "start:production": "NODE_ENV=production node build/server.js",
     "start:development": "NODE_ENV=development node build/server.js",

@@ -42,7 +42,7 @@ jobs:
           command: yarn test
           name: Run unit tests
       - run:
-          command: yarn build:production
+          command: yarn build
           name: Build for production
       - run:
           command: yarn start:production
