@@ -9,7 +9,7 @@
     "test": "NODE_ENV=test jest --coverage -i",
     "start:production": "NODE_ENV=production node build/index.js",
     "start:development": "NODE_ENV=development node build/index.js",
-    "start:test": "NODE_ENV=production node --max_old_space_size=8192 --optimize_for_size --max_executable_size=4096 --stack_size=409 build/index.js"
+    "start:test": "NODE_ENV=production node --max_old_space_size=8192 --optimize_for_size build/index.js"
   },
   "private": true,
   "author": "Carlos Penaforte",
