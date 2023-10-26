@@ -12,7 +12,6 @@
     "start:production": "NODE_ENV=production node build/server.js",
     "start:development": "NODE_ENV=development node build/server.js",
     "start:test": "NODE_ENV=production node --max_old_space_size=8192 --optimize_for_size --max_executable_size=4096 --stack_size=409 build/server.js",
-    "rimraf": "./node_modules/rimraf/bin.js"
   },
   "private": true,
   "author": "Carlos Penaforte",
