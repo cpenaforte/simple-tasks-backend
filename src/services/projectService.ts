@@ -111,7 +111,7 @@ export const insertProject = async (
 
             await client.query('BEGIN');
 
-            client.query('Select * FROM projects WHERE name = $1', [name], async (error, results) => {
+            client.query('Select * FROM projects WHERE name = $1 AND user_id = $2', [ name, userId ], async (error, results) => {
                 if (error) {
                     onError(error.message);
                     await client.query('ROLLBACK');
