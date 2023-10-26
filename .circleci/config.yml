@@ -45,7 +45,7 @@ jobs:
           command: yarn build
           name: Build for production
       - run:
-          command: yarn start:production
+          command: yarn start:test
           name: Start server
           background: true
       - run:
