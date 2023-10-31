@@ -1,7 +1,7 @@
 # simple-tasks-backend
 Express.js server for Simple Tasks App
 
-# How to run
+## How to run
 1. Create *.env* file using *.env.example*
 2. Add this lines to your .bashrc file:
 ```
@@ -38,3 +38,11 @@ function dcc() {
 }
 ```
 3. Run command `dcc up`
+
+
+## Recreate docker image for frontend tests
+
+1. Run `docker login --username cpenaforte` and insert password
+2. Run `docker build -t st-back-test . -f ./docker/Dockerfile.dev.test`
+3. Run `docker tag st-back-test cpenaforte/st-back-test`
+4. Run `docker push cpenaforte/st-back-test`

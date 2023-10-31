@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN yarn add global nodemon && yarn
+RUN yarn global add nodemon && yarn
 
 FROM node:18-alpine3.18
 
