@@ -1,6 +1,8 @@
 {
   "name": "simple-tasks-backend",
+  "author": "Carlos Penaforte",
   "version": "0.0.1",
+  "private": true,
   "description": "server for simple tasks",
   "main": "index.js",
   "scripts": {
@@ -11,8 +13,6 @@
     "start:development": "NODE_ENV=development node build/index.js",
     "start:test": "NODE_ENV=test node --max_old_space_size=8192 --optimize_for_size build/index.js"
   },
-  "private": true,
-  "author": "Carlos Penaforte",
   "dependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/cors": "^2.8.13",
