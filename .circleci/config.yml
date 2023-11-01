@@ -51,6 +51,23 @@ jobs:
       - run:
           command: sleep 15 && curl -I localhost:3000
           name: Verify server is running
+      
+  push_image:
+    docker:
+    # Service container image
+      - image: cimg/node:18.18
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          command: docker login --username cpenaforte --password $DOCKERHUB_PASSWORD
+          name: Login to DockerHub
+      - run:
+          command: docker build -t st-back-test . -f ./docker/Dockerfile.dev.test && docker tag st-back-test cpenaforte/st-back-test
+          name: Build Docker image
+      - run:
+          command: docker push cpenaforte/st-back-test
+          name: Push Docker image
 
   deploy:
     machine:
@@ -77,9 +94,15 @@ workflows:
   build_and_test_app:
     jobs:
       - build_and_test
-      - deploy:
+      - push_image:
           requires:
            - build_and_test
+          filters:
+            branches:
+                only: master
+      - deploy:
+          requires:
+           - push_image
           filters:
             branches:
                 only: master
