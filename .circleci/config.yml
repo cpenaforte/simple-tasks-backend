@@ -52,7 +52,7 @@ jobs:
           command: sleep 15 && curl -I localhost:3000
           name: Verify server is running
       
-  push_image:
+  push_test_image:
     docker:
     # Service container image
       - image: cimg/node:18.18
@@ -94,7 +94,7 @@ workflows:
   build_and_test_app:
     jobs:
       - build_and_test
-      - push_image:
+      - push_test_image:
           requires:
            - build_and_test
           filters:
@@ -102,7 +102,7 @@ workflows:
                 only: master
       - deploy:
           requires:
-           - push_image
+           - push_test_image
           filters:
             branches:
                 only: master
